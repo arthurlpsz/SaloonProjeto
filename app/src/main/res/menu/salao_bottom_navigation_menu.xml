@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_salao_dashboard"
+        android:icon="@drawable/home"
+        android:title="Dashboard" />
+    <item
+        android:id="@+id/navigation_salao_gerenciar"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="Gerenciar" />
+    <item
+        android:id="@+id/navigation_salao_perfil"
+        android:icon="@drawable/user"
+        android:title="Perfil" />
+</menu>

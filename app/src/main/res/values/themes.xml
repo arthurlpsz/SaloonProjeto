@@ -1,0 +1,23 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.SaloonProjeto" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Apply the custom style to all BottomNavigationViews in the app -->
+        <item name="bottomNavigationStyle">@style/App.BottomNavigationView</item>
+    </style>
+
+    <style name="Theme.SaloonProjeto" parent="Base.Theme.SaloonProjeto" />
+
+    <!-- Custom Widget Style for BottomNavigationView -->
+    <style name="App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="android:background">@color/petrol_blue</item>
+        <item name="itemIconTint">@color/bottom_nav_icon_color_selector</item>
+        <item name="itemTextColor">@color/bottom_nav_item_color_selector</item>
+        <item name="itemActiveIndicatorStyle">@style/App.BottomNavigationView.ActiveIndicator</item>
+    </style>
+
+    <!-- Custom Style for the Active Indicator -->
+    <style name="App.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/indicator_blue</item>
+    </style>
+
+</resources>
