@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "302773659351",
+    "project_id": "saloonprojeto-cf95a",
+    "storage_bucket": "saloonprojeto-cf95a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302773659351:android:ae95b3984e642c8bd57292",
+        "android_client_info": {
+          "package_name": "br.edu.fatecpg.saloonprojeto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTnkvduqgZ9nhCq9c89SXRC8VpaFJjZB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
