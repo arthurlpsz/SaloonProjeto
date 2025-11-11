@@ -20,6 +20,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="16dp"
+            android:contentDescription="@string/seta_para_voltar"
             android:src="@drawable/voltar"
             app:layout_constraintBottom_toBottomOf="@+id/title"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Agendar Horário"
+            android:text="@string/agendar_horario"
             android:textColor="@color/petrol_blue"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:text="Salão:"
+            android:text="@string/salao_agendado"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -82,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Serviço:"
+            android:text="@string/servico"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -120,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Data:"
+            android:text="@string/data"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -140,32 +141,32 @@
             app:layout_constraintTop_toBottomOf="@+id/date_label">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/today_button"
+                android:id="@+id/btn_hoje"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="2"
                 android:background="@drawable/rounded_gold_border"
-                android:text="Hoje"
+                android:text="@string/hoje"
                 android:textColor="@color/gold" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/tomorrow_button"
+                android:id="@+id/btn_amanha"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="2"
                 android:background="@drawable/rounded_gold_border"
-                android:text="Amanhã"
+                android:text="@string/amanha"
                 android:textColor="@color/gold" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/other_day_button"
+                android:id="@+id/btn_outro_dia"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:background="@drawable/rounded_gold_border"
-                android:text="Escolher Outro dia"
+                android:text="@string/escolher_outro_dia"
                 android:textColor="@color/gold" />
         </LinearLayout>
 
@@ -188,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Horários Disponíveis:"
+            android:text="@string/horarios_disponiveis"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -207,17 +208,16 @@
             app:layout_constraintTop_toBottomOf="@+id/time_label" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/confirm_button"
+            android:id="@+id/btn_confirmar_agendamento"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:backgroundTint="@color/gold"
-            android:text="Confirmar Agendamento"
+            android:text="@string/confirmar_agendamento"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:cornerRadius="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/time_slots_recycler_view" />

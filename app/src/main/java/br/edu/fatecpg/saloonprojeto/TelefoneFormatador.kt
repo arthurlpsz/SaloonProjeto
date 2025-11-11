@@ -5,7 +5,7 @@ import android.text.TextWatcher
 import android.widget.EditText
 import java.lang.ref.WeakReference
 
-class PhoneNumberFormattingTextWatcher(editText: EditText) : TextWatcher {
+class TelefoneFormatador(editText: EditText) : TextWatcher {
 
     private val editTextRef: WeakReference<EditText> = WeakReference(editText)
     private var isFormatting = false

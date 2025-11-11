@@ -46,7 +46,7 @@ class CadastroActivity : AppCompatActivity() {
         val emailField: EditText = findViewById(R.id.email)
         val passwordField: EditText = findViewById(R.id.password)
 
-        phoneField.addTextChangedListener(PhoneNumberFormattingTextWatcher(phoneField))
+        phoneField.addTextChangedListener(TelefoneFormatador(phoneField))
 
         loginButton.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))

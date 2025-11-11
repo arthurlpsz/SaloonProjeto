@@ -16,9 +16,9 @@ import java.util.Locale
 
 class AgendarFragment : Fragment() {
 
-    private lateinit var todayButton: Button
-    private lateinit var tomorrowButton: Button
-    private lateinit var otherDayButton: Button
+    private lateinit var btnHoje: Button
+    private lateinit var btnAmanha: Button
+    private lateinit var btnOutroDia: Button
     private lateinit var dateButtons: List<Button>
 
     override fun onCreateView(
@@ -38,29 +38,29 @@ class AgendarFragment : Fragment() {
             findNavController().navigate(R.id.action_agendarFragment_to_dashboardClienteFragment)
         }
 
-        todayButton = view.findViewById(R.id.today_button)
-        tomorrowButton = view.findViewById(R.id.tomorrow_button)
-        otherDayButton = view.findViewById(R.id.other_day_button)
+        btnHoje = view.findViewById(R.id.btn_hoje)
+        btnAmanha = view.findViewById(R.id.btn_amanha)
+        btnOutroDia = view.findViewById(R.id.btn_outro_dia)
 
-        dateButtons = listOf(todayButton, tomorrowButton, otherDayButton)
+        dateButtons = listOf(btnHoje, btnAmanha, btnOutroDia)
 
-        todayButton.setOnClickListener {
+        btnHoje.setOnClickListener {
             updateButtonSelection(it)
-            otherDayButton.text = "Outro dia"
+            btnOutroDia.text = "Outro dia"
         }
 
-        tomorrowButton.setOnClickListener {
+        btnAmanha.setOnClickListener {
             updateButtonSelection(it)
-            otherDayButton.text = "Outro dia"
+            btnOutroDia.text = "Outro dia"
         }
 
-        otherDayButton.setOnClickListener {
+        btnOutroDia.setOnClickListener {
             updateButtonSelection(it)
             showDatePicker()
         }
 
-        // Select today by default
-        todayButton.performClick()
+        // Clica no hoje por padrão
+        btnHoje.performClick()
     }
 
     private fun updateButtonSelection(selectedButton: View) {
@@ -73,7 +73,7 @@ class AgendarFragment : Fragment() {
         val calendar = Calendar.getInstance()
 
         // If "Other day" button already has a date, use it to initialize the picker
-        val otherDayText = otherDayButton.text.toString()
+        val otherDayText = btnOutroDia.text.toString()
         if (otherDayText != "Outro dia") {
             try {
                 val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -86,16 +86,16 @@ class AgendarFragment : Fragment() {
             }
         }
 
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val ano = calendar.get(Calendar.YEAR)
+        val mes = calendar.get(Calendar.MONTH)
+        val dia = calendar.get(Calendar.DAY_OF_MONTH)
 
         val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
             val selectedCalendar = Calendar.getInstance()
             selectedCalendar.set(selectedYear, selectedMonth, selectedDay)
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-            otherDayButton.text = sdf.format(selectedCalendar.time)
-        }, year, month, day)
+            btnOutroDia.text = sdf.format(selectedCalendar.time)
+        }, ano, mes, dia)
 
         // Set min date to today
         datePickerDialog.datePicker.minDate = Calendar.getInstance().timeInMillis
