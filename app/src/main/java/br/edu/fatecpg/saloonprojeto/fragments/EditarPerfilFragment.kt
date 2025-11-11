@@ -5,23 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import br.edu.fatecpg.saloonprojeto.R
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class EditarPerfilFragment : Fragment() {
 
-    private lateinit var tilNome: TextInputLayout
-    private lateinit var etNome: TextInputEditText
-    private lateinit var etEmail: TextInputEditText
-    private lateinit var etTelefone: TextInputEditText
-    private lateinit var etEndereco: TextInputEditText
+    private lateinit var nomeTitulo: TextView
+    private lateinit var edtNome: EditText
+    private lateinit var edtEmail: EditText
+    private lateinit var edtTelefone: EditText
+    private lateinit var edtEndereco: EditText
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -42,11 +42,11 @@ class EditarPerfilFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
         userId = auth.currentUser?.uid
 
-        tilNome = view.findViewById(R.id.til_nome)
-        etNome = view.findViewById(R.id.edt_nome)
-        etEmail = view.findViewById(R.id.edt_email)
-        etTelefone = view.findViewById(R.id.et_telefone)
-        etEndereco = view.findViewById(R.id.et_endereco)
+        nomeTitulo = view.findViewById(R.id.name_label)
+        edtNome = view.findViewById(R.id.edt_nome)
+        edtEmail = view.findViewById(R.id.edt_email)
+        edtTelefone = view.findViewById(R.id.edt_telefone)
+        edtEndereco = view.findViewById(R.id.edt_endereco)
 
         val backArrow = view.findViewById<ImageView>(R.id.iv_back)
         backArrow.setOnClickListener {
@@ -68,15 +68,15 @@ class EditarPerfilFragment : Fragment() {
                     if (document != null) {
                         userType = document.getString("tipo")
                         if (userType == "salao") {
-                            tilNome.hint = "Nome do Salão"
-                            etNome.setText(document.getString("nomeSalao"))
+                            nomeTitulo.text = "Nome do Salão"
+                            edtNome.setText(document.getString("nomeSalao"))
                         } else {
-                            tilNome.hint = "Nome"
-                            etNome.setText(document.getString("nome"))
+                            nomeTitulo.text = "Nome"
+                            edtNome.setText(document.getString("nome"))
                         }
-                        etEmail.setText(document.getString("email"))
-                        etTelefone.setText(document.getString("telefone"))
-                        etEndereco.setText(document.getString("endereco"))
+                        edtEmail.setText(document.getString("email"))
+                        edtTelefone.setText(document.getString("telefone"))
+                        edtEndereco.setText(document.getString("endereco"))
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -86,10 +86,10 @@ class EditarPerfilFragment : Fragment() {
     }
 
     private fun saveUserProfile() {
-        val nome = etNome.text.toString().trim()
-        val email = etEmail.text.toString().trim()
-        val telefone = etTelefone.text.toString().trim()
-        val endereco = etEndereco.text.toString().trim()
+        val nome = edtNome.text.toString().trim()
+        val email = edtEmail.text.toString().trim()
+        val telefone = edtTelefone.text.toString().trim()
+        val endereco = edtEndereco.text.toString().trim()
 
         if (nome.isEmpty() || email.isEmpty() || telefone.isEmpty() || endereco.isEmpty()) {
             Toast.makeText(requireContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show()

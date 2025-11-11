@@ -41,4 +41,5 @@
     <string name="editar_perfil">Editar Perfil</string>
     <string name="salvar_alteracoes">Salvar Alterações</string>
     <string name="endereco">Endereço</string>
+    <string name="sair">Sair</string>
 </resources>

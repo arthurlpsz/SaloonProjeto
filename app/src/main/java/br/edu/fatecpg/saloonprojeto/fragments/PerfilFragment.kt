@@ -39,10 +39,10 @@ class PerfilFragment : Fragment() {
         db = FirebaseFirestore.getInstance()
 
         profileName = view.findViewById(R.id.profile_name)
-        profileEmail = view.findViewById(R.id.profile_email)
-        logoutButton = view.findViewById(R.id.logout_button)
+        profileEmail = view.findViewById(R.id.txv_email)
+        logoutButton = view.findViewById(R.id.btn_logout)
 
-        val editProfileButton = view.findViewById<Button>(R.id.edit_profile_button)
+        val editProfileButton = view.findViewById<Button>(R.id.btn_editar_perfil)
         editProfileButton.setOnClickListener {
             findNavController().navigate(R.id.action_perfilFragment_to_editarPerfilFragment)
         }

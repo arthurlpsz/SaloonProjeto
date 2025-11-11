@@ -92,6 +92,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_view"
         tools:itemCount="4"
-        tools:listitem="@layout/item_salon_card" />
+        tools:listitem="@layout/item_salao_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
