@@ -13,6 +13,7 @@
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:contentDescription="@string/seta_para_voltar"
         android:src="@drawable/voltar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Editar Perfil"
+        android:text="@string/editar_perfil"
         android:textColor="@color/petrol_blue"
         android:textSize="22sp"
         android:textStyle="bold"
@@ -30,85 +31,117 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_nome"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/name_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
+        android:text="@string/nome_do_usuario"
+        android:textColor="@color/petrol_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <EditText
+        android:id="@+id/edt_nome"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
-        android:hint="Nome"
+        android:autofillHints="Nome do usuário"
+        android:background="@drawable/edit_text_background"
+        android:inputType="textPersonName"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title">
+        app:layout_constraintTop_toBottomOf="@+id/name_label" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_nome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_email"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/email_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
+        android:text="@string/email"
+        android:textColor="@color/petrol_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_nome" />
+
+    <EditText
+        android:id="@+id/edt_email"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
-        android:hint="Email"
+        android:autofillHints="Email"
+        android:background="@drawable/edit_text_background"
+        android:inputType="textEmailAddress"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_nome">
+        app:layout_constraintTop_toBottomOf="@+id/email_label"
+        tools:ignore="LabelFor" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_telefone"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/telefone_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
+        android:text="@string/telefone"
+        android:textColor="@color/petrol_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_email" />
+
+    <EditText
+        android:id="@+id/edt_telefone"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
-        android:hint="Telefone"
+        android:autofillHints=""
+        android:background="@drawable/edit_text_background"
+        android:inputType="phone"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_email">
+        app:layout_constraintTop_toBottomOf="@+id/telefone_label"
+        tools:ignore="LabelFor" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_telefone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_endereco"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/endereco_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
+        android:text="@string/endereco"
+        android:textColor="@color/petrol_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_telefone" />
+
+    <EditText
+        android:id="@+id/edt_endereco"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="32dp"
-        android:hint="Endereço"
+        android:background="@drawable/edit_text_background"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_telefone">
+        app:layout_constraintTop_toBottomOf="@+id/endereco_label"
+        tools:ignore="LabelFor" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_endereco"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/btn_salvar"
         android:layout_width="0dp"
         android:layout_height="55dp"
@@ -116,12 +149,12 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="@color/gold"
-        android:text="Salvar Alterações"
+        android:text="@string/salvar_alteracoes"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_endereco" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_endereco" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

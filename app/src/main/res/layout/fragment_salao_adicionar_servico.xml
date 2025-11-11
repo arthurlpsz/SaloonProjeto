@@ -1,99 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:background="@color/white"
     tools:context=".fragments.SalaoAdicionarServicoFragment">
 
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:text="Adicionar Novo Serviço"
-        android:textSize="24sp"
+        android:textColor="@color/petrol_blue"
+        android:textSize="22sp"
         android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="24dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/name_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="Nome do Serviço"
+        android:textColor="@color/petrol_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_service_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Nome do Serviço" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+        android:id="@+id/et_service_name"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Ex: Corte de Cabelo"
+        android:inputType="textCapWords"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_label" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/description_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Descrição do Serviço"
+        android:textColor="@color/petrol_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_service_name" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_service_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Descrição do Serviço" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+        android:id="@+id/et_service_description"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Ex: Inclui lavagem e secagem"
+        android:inputType="text"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_label" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/price_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Preço do Serviço"
+        android:textColor="@color/petrol_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_service_description" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_service_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Preço do Serviço"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+        android:id="@+id/et_service_price"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Ex: 50.00"
+        android:inputType="numberDecimal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/price_label" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/duration_label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp">
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="Duração (em minutos)"
+        android:textColor="@color/petrol_blue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_service_price" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_service_duration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Duração (em minutos)"
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
+    <EditText
+        android:id="@+id/et_service_duration"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Ex: 60"
+        android:inputType="number"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/duration_label" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_service_duration">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_cancel"
-            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
-            android:layout_height="55dp"
+            android:layout_height="52dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_gold_border"
-            android:backgroundTint="@color/gold"
             android:text="Cancelar"
+            android:textAllCaps="false"
             android:textColor="@color/gold"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/btn_save_service"
             android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_weight="1"
+            android:layout_height="58dp"
             android:layout_marginStart="8dp"
+            android:layout_weight="1"
             android:backgroundTint="@color/gold"
             android:text="Salvar Serviço"
-            android:textSize="16sp" />
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:cornerRadius="12dp" />
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

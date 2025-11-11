@@ -43,8 +43,8 @@ class EditarPerfilFragment : Fragment() {
         userId = auth.currentUser?.uid
 
         tilNome = view.findViewById(R.id.til_nome)
-        etNome = view.findViewById(R.id.et_nome)
-        etEmail = view.findViewById(R.id.et_email)
+        etNome = view.findViewById(R.id.edt_nome)
+        etEmail = view.findViewById(R.id.edt_email)
         etTelefone = view.findViewById(R.id.et_telefone)
         etEndereco = view.findViewById(R.id.et_endereco)
 

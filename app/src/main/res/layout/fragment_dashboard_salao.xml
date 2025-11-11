@@ -7,58 +7,19 @@
     android:background="@color/white"
     tools:context=".fragments.SalaoDashboardFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
         android:id="@+id/header_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_header_background"
-        android:paddingBottom="16dp"
+        layout="@layout/header_usuario"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:contentDescription="Foto do usuario"
-            android:src="@drawable/default_user"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/welcome_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Olá,"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/user_name"
-            app:layout_constraintStart_toEndOf="@+id/profile_image"
-            app:layout_constraintTop_toTopOf="@+id/profile_image" />
-
-        <TextView
-            android:id="@+id/user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nome do usuário"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/profile_image"
-            app:layout_constraintStart_toStartOf="@+id/welcome_message"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_message" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="Meus Serviços"
+        android:text="@string/meus_servicos"
         android:textColor="@color/petrol_blue"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -73,7 +34,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/gold"
-        android:text="Gerenciar Serviços"
+        android:text="@string/gerenciar_servicos"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header_view" />
@@ -87,6 +48,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/manage_services_button" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
