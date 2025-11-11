@@ -4,23 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import br.edu.fatecpg.saloonprojeto.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class SalaoGerenciarServicosFragment : Fragment() {
+class SalaoAdicionarServicoFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_salao_gerenciar_servicos, container, false)
+        val view = inflater.inflate(R.layout.fragment_salao_adicionar_servico, container, false)
 
-        val fabAddService = view.findViewById<FloatingActionButton>(R.id.fab_add_service)
-        fabAddService.setOnClickListener {
-            findNavController().navigate(R.id.action_salao_gerenciar_to_salao_adicionar)
+        val btnCancel = view.findViewById<Button>(R.id.btn_cancel)
+        btnCancel.setOnClickListener {
+            findNavController().popBackStack()
         }
 
         return view

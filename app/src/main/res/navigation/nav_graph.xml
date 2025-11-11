@@ -21,12 +21,26 @@
         android:id="@+id/navigation_perfil"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.PerfilFragment"
         android:label="Perfil"
-        tools:layout="@layout/fragment_perfil" />
+        tools:layout="@layout/fragment_perfil">
+        <action
+            android:id="@+id/action_perfilFragment_to_editarPerfilFragment"
+            app:destination="@id/navigation_editar_perfil" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_agendar"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.AgendarFragment"
         android:label="Agendar"
-        tools:layout="@layout/fragment_agendar" />
+        tools:layout="@layout/fragment_agendar">
+        <action
+            android:id="@+id/action_agendarFragment_to_dashboardClienteFragment"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_editar_perfil"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.EditarPerfilFragment"
+        android:label="Editar Perfil"
+        tools:layout="@layout/fragment_editar_perfil" />
 
 </navigation>

@@ -16,15 +16,27 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            // Usuário está logado, tenta redirecionar. Se falhar, a tela de login será exibida.
+            redirectToDashboard(currentUser.uid)
+        } else {
+            // Nenhum usuário logado, exibe a tela de login.
+            showLoginScreen()
+        }
+    }
+
+    private fun showLoginScreen() {
+        setContentView(R.layout.activity_login)
+
         val emailField = findViewById<EditText>(R.id.email)
         val passwordField = findViewById<EditText>(R.id.password)
-        val loginButton: Button = findViewById(R.id.login_button)
-        val createAccountButton: Button = findViewById(R.id.create_account_button)
+        val loginButton: Button = findViewById(R.id.btn_login)
+        val createAccountButton: Button = findViewById(R.id.btn_cadastrar)
 
         loginButton.setOnClickListener {
             val email = emailField.text.toString().trim()
@@ -38,38 +50,11 @@ class LoginActivity : AppCompatActivity() {
             auth.signInWithEmailAndPassword(email, senha)
                 .addOnSuccessListener { result ->
                     val userId = result.user?.uid
-
-                    if (userId == null) {
+                    if (userId != null) {
+                        redirectToDashboard(userId)
+                    } else {
                         Toast.makeText(this, "Erro interno: usuário inválido", Toast.LENGTH_LONG).show()
-                        return@addOnSuccessListener
                     }
-
-                    db.collection("usuarios").document(userId).get()
-                        .addOnSuccessListener { doc ->
-                            if (doc.exists()) {
-                                val tipo = doc.getString("tipo") // <- campo correto
-
-                                when (tipo) {
-                                    "cliente" -> {
-                                        startActivity(Intent(this, MainActivity::class.java))
-                                        finish()
-                                    }
-                                    "salao" -> {
-                                        startActivity(Intent(this, SalaoDashboardActivity::class.java))
-                                        finish()
-                                    }
-                                    else -> {
-                                        Toast.makeText(this, "Tipo de usuário desconhecido", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            } else {
-                                Toast.makeText(this, "Usuário não encontrado no banco de dados", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(this, "Erro ao acessar Firestore: ${e.message}", Toast.LENGTH_LONG).show()
-                            e.printStackTrace()
-                        }
                 }
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Falha no login: ${e.message}", Toast.LENGTH_LONG).show()
@@ -80,5 +65,42 @@ class LoginActivity : AppCompatActivity() {
         createAccountButton.setOnClickListener {
             startActivity(Intent(this, CadastroActivity::class.java))
         }
+    }
+
+    private fun redirectToDashboard(userId: String) {
+        db.collection("usuarios").document(userId).get()
+            .addOnSuccessListener { doc ->
+                if (doc.exists()) {
+                    val tipo = doc.getString("tipo") // Correção: Usando o campo "tipo"
+
+                    val targetActivity = when (tipo) {
+                        "cliente" -> MainActivity::class.java
+                        "salao" -> SalaoDashboardActivity::class.java
+                        else -> null
+                    }
+
+                    if (targetActivity != null) {
+                        startActivity(Intent(this, targetActivity))
+                        finish() // Finaliza a LoginActivity em caso de sucesso
+                    } else {
+                        // Tipo de usuário desconhecido, desconecta e mostra a tela de login
+                        Toast.makeText(this, "Tipo de usuário desconhecido", Toast.LENGTH_SHORT).show()
+                        auth.signOut()
+                        showLoginScreen()
+                    }
+                } else {
+                    // Documento não existe, desconecta e mostra a tela de login
+                    Toast.makeText(this, "Usuário não encontrado no banco de dados", Toast.LENGTH_SHORT).show()
+                    auth.signOut()
+                    showLoginScreen()
+                }
+            }
+            .addOnFailureListener { e ->
+                // Erro no Firestore, desconecta e mostra a tela de login
+                Toast.makeText(this, "Erro ao acessar Firestore: ${e.message}", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
+                auth.signOut()
+                showLoginScreen()
+            }
     }
 }

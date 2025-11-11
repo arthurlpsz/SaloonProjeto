@@ -3,24 +3,54 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/salao_nav_graph"
-    app:startDestination="@id/navigation_salao_dashboard">
+    app:startDestination="@id/navigation_salao_servicos">
 
     <fragment
-        android:id="@+id/navigation_salao_dashboard"
+        android:id="@+id/navigation_salao_servicos"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoDashboardFragment"
-        android:label="Dashboard"
-        tools:layout="@layout/fragment_dashboard_salao" />
+        android:label="Serviços"
+        tools:layout="@layout/fragment_dashboard_salao" >
+        <action
+            android:id="@+id/action_salao_dashboard_to_salao_gerenciar"
+            app:destination="@id/navigation_salao_gerenciar" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_salao_gerenciar"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoGerenciarServicosFragment"
-        android:label="Gerenciar"
-        tools:layout="@layout/fragment_salao_gerenciar_servicos" />
+        android:label="Gerenciar Serviços"
+        tools:layout="@layout/fragment_salao_gerenciar_servicos" >
+        <action
+            android:id="@+id/action_salao_gerenciar_to_salao_adicionar"
+            app:destination="@id/navigation_salao_adicionar" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_salao_adicionar"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoAdicionarServicoFragment"
+        android:label="Adicionar Serviço"
+        tools:layout="@layout/fragment_salao_adicionar_servico" />
+
+    <fragment
+        android:id="@+id/navigation_agendamentos"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.MeusAgendamentosFragment"
+        android:label="Agendamentos"
+        tools:layout="@layout/fragment_meus_agendamentos" />
 
     <fragment
         android:id="@+id/navigation_salao_perfil"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.PerfilFragment"
         android:label="Perfil"
-        tools:layout="@layout/fragment_perfil" />
+        tools:layout="@layout/fragment_perfil" >
+        <action
+            android:id="@+id/action_perfilFragment_to_editarPerfilFragment"
+            app:destination="@id/navigation_editar_perfil" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_editar_perfil"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.EditarPerfilFragment"
+        android:label="Editar Perfil"
+        tools:layout="@layout/fragment_editar_perfil" />
 
 </navigation>

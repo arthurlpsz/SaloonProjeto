@@ -60,32 +60,34 @@
     <Button
         android:id="@+id/edit_profile_button"
         android:layout_width="0dp"
-        android:layout_height="55dp"
+        android:layout_height="60dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:backgroundTint="@color/petrol_blue"
+        android:backgroundTint="@color/gold"
         android:text="Editar Perfil"
         android:textColor="@color/white"
+        android:textSize="18sp"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_email" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/logout_button"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
+        android:background="@drawable/rounded_gold_border"
         android:text="Sair"
-        android:textColor="@color/petrol_blue"
+        android:textAllCaps="false"
+        android:textColor="@color/gold"
+        android:textSize="18sp"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_profile_button"
-        app:strokeColor="@color/petrol_blue" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_profile_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

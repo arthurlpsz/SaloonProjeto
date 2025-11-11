@@ -36,7 +36,7 @@ class CadastroActivity : AppCompatActivity() {
         clientFields = findViewById(R.id.client_fields_group)
         salonFields = findViewById(R.id.salon_fields_group)
 
-        val loginButton: Button = findViewById(R.id.login_button)
+        val loginButton: Button = findViewById(R.id.btn_login)
         val cadastroButton: Button = findViewById(R.id.cadastro_button)
 
         val nameField: EditText = findViewById(R.id.name)
@@ -45,6 +45,8 @@ class CadastroActivity : AppCompatActivity() {
         val phoneField: EditText = findViewById(R.id.phone)
         val emailField: EditText = findViewById(R.id.email)
         val passwordField: EditText = findViewById(R.id.password)
+
+        phoneField.addTextChangedListener(PhoneNumberFormattingTextWatcher(phoneField))
 
         loginButton.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))

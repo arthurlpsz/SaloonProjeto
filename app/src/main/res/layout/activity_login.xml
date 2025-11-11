@@ -7,13 +7,13 @@
     android:background="@color/petrol_blue"
     tools:context=".LoginActivity">
 
-    <!-- You can add a pattern or logo here later -->
     <ImageView
         android:id="@+id/logo"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="48dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_width="180dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:contentDescription="Logo do App Saloon"
+        android:src="@drawable/logo_saloon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -107,34 +107,41 @@
             app:layout_constraintTop_toBottomOf="@+id/password" />
 
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/btn_login"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
-            android:backgroundTint="@color/petrol_blue"
+            android:backgroundTint="@color/gold"
             android:text="Login"
             android:textColor="@color/white"
+            android:textSize="18sp"
             app:cornerRadius="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/forgot_password_text" />
 
-        <Button
-            android:id="@+id/create_account_button"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_cadastrar"
             android:layout_width="0dp"
             android:layout_height="55dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
-            android:backgroundTint="@color/gold"
-            android:text="Criar Conta"
-            android:textColor="@color/black"
+            android:text="Já tem conta? Fazer Login"
+            android:textAllCaps="false"
+            android:textColor="@color/gold"
+            android:textSize="18sp"
             app:cornerRadius="12dp"
+            app:strokeColor="@color/gold"
+            app:strokeWidth="2dp"
+            app:backgroundTint="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/login_button" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,7 +20,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/edit_button"/>
+            app:layout_constraintEnd_toStartOf="@+id/btn_editar_sevico"/>
 
         <TextView
             android:id="@+id/service_price"
@@ -32,7 +32,7 @@
             app:layout_constraintTop_toBottomOf="@+id/service_name" />
 
         <TextView
-            android:id="@+id/service_duration"
+            android:id="@+id/duracao_servico"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Duração: 60 min"
@@ -41,22 +41,29 @@
             app:layout_constraintTop_toBottomOf="@+id/service_price" />
 
         <ImageButton
-            android:id="@+id/edit_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_edit"
+            android:id="@+id/btn_editar_sevico"
+            android:layout_width="50dp"
+            android:layout_height="54dp"
+            android:backgroundTint="@color/gold"
+            android:contentDescription="Botão para editar servico"
+            android:scaleType="centerInside"
+            android:src="@drawable/lapis"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="6dp"
             app:layout_constraintEnd_toStartOf="@+id/delete_button"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_delete"
+            android:layout_width="50dp"
+            android:layout_height="54dp"
+            android:backgroundTint="@color/gold"
+            android:contentDescription="Botão para deletar um serviço"
+            android:scaleType="centerInside"
+            android:src="@drawable/lixo"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
