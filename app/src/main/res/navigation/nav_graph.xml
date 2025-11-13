@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/navigation_agendar"
-        android:name="br.edu.fatecpg.saloonprojeto.fragments.AgendarFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.AgendaFragment"
         android:label="Agendar"
         tools:layout="@layout/fragment_agendar">
         <action

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="service_name_label" type="id" />
+    <item name="separator0" type="id" />
+    <item name="separator1" type="id" />
+    <item name="date_label" type="id" />
+    <item name="date_button_layout" type="id" />
+    <item name="btn_hoje" type="id" />
+    <item name="btn_amanha" type="id" />
+    <item name="btn_outro_dia" type="id" />
+    <item name="separator2" type="id" />
+    <item name="time_label" type="id" />
+</resources>
