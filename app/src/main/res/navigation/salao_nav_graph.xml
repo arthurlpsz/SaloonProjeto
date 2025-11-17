@@ -11,8 +11,8 @@
         android:label="Serviços"
         tools:layout="@layout/fragment_dashboard_salao" >
         <action
-            android:id="@+id/action_salao_dashboard_to_salao_gerenciar"
-            app:destination="@id/navigation_salao_gerenciar" />
+            android:id="@+id/action_salao_dashboard_to_salao_dashboard"
+            app:destination="@id/navigation_salao_dashboard" />
         <action
             android:id="@+id/action_salao_dashboard_to_salao_adicionar"
             app:destination="@id/navigation_salao_adicionar" />
@@ -22,13 +22,16 @@
         <action
             android:id="@+id/action_servicos_to_perfil"
             app:destination="@id/navigation_salao_perfil" />
+        <action
+            android:id="@+id/action_salao_dashboard_to_salao_editar"
+            app:destination="@id/navigation_salao_editar" />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_salao_gerenciar"
-        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoGerenciarServicosFragment"
+        android:id="@+id/navigation_salao_dashboard"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoDashboardFragment"
         android:label="Gerenciar Serviços"
-        tools:layout="@layout/fragment_salao_gerenciar_servicos" >
+        tools:layout="@layout/fragment_dashboard_salao" >
         <action
             android:id="@+id/action_salao_gerenciar_to_salao_adicionar"
             app:destination="@id/navigation_salao_adicionar" />
@@ -39,6 +42,16 @@
         android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoAdicionarServicoFragment"
         android:label="Adicionar Serviço"
         tools:layout="@layout/fragment_salao_adicionar_servico" />
+    
+    <fragment
+        android:id="@+id/navigation_salao_editar"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoEditarServicoFragment"
+        android:label="Editar Serviço"
+        tools:layout="@layout/fragment_salao_editar_servico" >
+        <argument
+            android:name="servicoId"
+            app:argType="string" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_agendamentos"

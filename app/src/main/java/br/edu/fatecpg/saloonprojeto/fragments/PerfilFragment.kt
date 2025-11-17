@@ -17,9 +17,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class PerfilFragment : Fragment() {
 
-    private lateinit var profileName: TextView
-    private lateinit var profileEmail: TextView
-    private lateinit var logoutButton: Button
+    private lateinit var nomePerfil: TextView
+    private lateinit var emailPerfil: TextView
+    private lateinit var btnLogout: Button
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -38,16 +38,16 @@ class PerfilFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        profileName = view.findViewById(R.id.profile_name)
-        profileEmail = view.findViewById(R.id.txv_email)
-        logoutButton = view.findViewById(R.id.btn_logout)
+        nomePerfil = view.findViewById(R.id.txv_nome)
+        emailPerfil = view.findViewById(R.id.txv_email)
+        btnLogout = view.findViewById(R.id.btn_logout)
 
         val editProfileButton = view.findViewById<Button>(R.id.btn_editar_perfil)
         editProfileButton.setOnClickListener {
             findNavController().navigate(R.id.action_perfilFragment_to_editarPerfilFragment)
         }
 
-        logoutButton.setOnClickListener {
+        btnLogout.setOnClickListener {
             auth.signOut()
             activity?.let {
                 val intent = Intent(it, LoginActivity::class.java)
@@ -67,11 +67,11 @@ class PerfilFragment : Fragment() {
                     if (document != null) {
                         val userType = document.getString("tipo")
                         if (userType == "salao") {
-                            profileName.text = document.getString("nomeSalao")
+                            nomePerfil.text = document.getString("nomeSalao")
                         } else {
-                            profileName.text = document.getString("nome")
+                            nomePerfil.text = document.getString("nome")
                         }
-                        profileEmail.text = document.getString("email")
+                        emailPerfil.text = document.getString("email")
 
                     }
                 }

@@ -90,7 +90,7 @@ class CadastroActivity : AppCompatActivity() {
                             val intent = if (isClientSelected) {
                                 Intent(this, LoginActivity::class.java)
                             } else {
-                                Intent(this, SalaoDashboardActivity::class.java)
+                                Intent(this, SalaoActivity::class.java)
                             }
                             startActivity(intent)
                             finish()

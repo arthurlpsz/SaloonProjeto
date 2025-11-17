@@ -75,7 +75,7 @@ class LoginActivity : AppCompatActivity() {
 
                     val targetActivity = when (tipo) {
                         "cliente" -> MainActivity::class.java
-                        "salao" -> SalaoDashboardActivity::class.java
+                        "salao" -> SalaoActivity::class.java
                         else -> null
                     }
 

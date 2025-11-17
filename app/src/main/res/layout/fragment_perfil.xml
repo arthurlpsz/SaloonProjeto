@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/txv_saloes_disponiveis" />
 
     <TextView
-        android:id="@+id/profile_name"
+        android:id="@+id/txv_nome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -59,7 +59,7 @@
         android:layout_marginTop="24dp"
         android:src="@drawable/email"
         app:layout_constraintStart_toStartOf="@+id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/profile_name" />
+        app:layout_constraintTop_toBottomOf="@+id/txv_nome" />
 
     <TextView
         android:id="@+id/txv_email"
@@ -74,7 +74,7 @@
         app:layout_constraintTop_toTopOf="@+id/icon_email" />
 
     <ImageView
-        android:id="@+id/icon_phone"
+        android:id="@+id/icon_telefone"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="16dp"
@@ -83,37 +83,37 @@
         app:layout_constraintTop_toBottomOf="@+id/icon_email" />
 
     <TextView
-        android:id="@+id/txv_phone"
+        android:id="@+id/txv_telefone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="(XX) XXXXX-XXXX"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/icon_phone"
-        app:layout_constraintStart_toEndOf="@+id/icon_phone"
-        app:layout_constraintTop_toTopOf="@+id/icon_phone" />
+        app:layout_constraintBottom_toBottomOf="@+id/icon_telefone"
+        app:layout_constraintStart_toEndOf="@+id/icon_telefone"
+        app:layout_constraintTop_toTopOf="@+id/icon_telefone" />
 
     <ImageView
-        android:id="@+id/icon_address"
+        android:id="@+id/icon_endereco"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/endereco"
         app:layout_constraintStart_toStartOf="@+id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/icon_phone" />
+        app:layout_constraintTop_toBottomOf="@+id/icon_telefone" />
 
     <TextView
-        android:id="@+id/txv_address"
+        android:id="@+id/txv_endereco"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Rua Exemplo, 123"
         android:textColor="@color/black"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/icon_address"
-        app:layout_constraintStart_toEndOf="@+id/icon_address"
-        app:layout_constraintTop_toTopOf="@+id/icon_address" />
+        app:layout_constraintBottom_toBottomOf="@+id/icon_endereco"
+        app:layout_constraintStart_toEndOf="@+id/icon_endereco"
+        app:layout_constraintTop_toTopOf="@+id/icon_endereco" />
 
     <Button
         android:id="@+id/btn_editar_perfil"
@@ -129,7 +129,7 @@
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txv_address" />
+        app:layout_constraintTop_toBottomOf="@+id/txv_endereco" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_logout"

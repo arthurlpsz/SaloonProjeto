@@ -1,11 +1,13 @@
-package br.edu.fatecpg.saloonprojeto.adapters
+package br.edu.fatecpg.saloonprojeto.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,7 +37,12 @@ class ServicoAdapter(
         val servico = listaServicos[position]
 
         holder.nome.text = servico["nome"].toString()
-        holder.preco.text = "R$ %.2f".format(servico["preco"] ?: 0.0)
+        val preco = servico["preco"]
+        val precoFormatado = when (preco) {
+            is Number -> "R$ %.2f".format(preco.toDouble())
+            else -> "R$ 0.00"
+        }
+        holder.preco.text = precoFormatado
         holder.duracao.text = "Duração: ${servico["duracao"]} min"
 
         holder.btnExcluir.setOnClickListener {
@@ -52,7 +59,10 @@ class ServicoAdapter(
         }
 
         holder.btnEditar.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "Em breve: edição de serviços", Toast.LENGTH_SHORT).show()
+            val id = servico["id"] as? String ?: return@setOnClickListener
+            val bundle = Bundle()
+            bundle.putString("servicoId", id)
+            holder.itemView.findNavController().navigate(R.id.action_salao_dashboard_to_salao_editar, bundle)
         }
     }
 
