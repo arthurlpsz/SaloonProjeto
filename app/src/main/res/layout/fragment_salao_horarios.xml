@@ -8,7 +8,7 @@
     tools:context=".fragments.SalaoHorariosFragment">
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/txv_saloes_disponiveis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Definir Horário de Funcionamento"
@@ -26,7 +26,7 @@
         android:text="Horário de Abertura"
         android:textColor="@color/black"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/txv_saloes_disponiveis"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp"/>
 

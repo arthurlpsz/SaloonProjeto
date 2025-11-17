@@ -11,7 +11,7 @@
         android:id="@+id/header_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_header_background"
+        android:background="@color/petrol_blue"
         android:paddingBottom="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +54,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/txv_saloes_disponiveis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -64,7 +64,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_view" />
+        app:layout_constraintTop_toBottomOf="@+id/search_view" />
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
@@ -77,7 +77,7 @@
         app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/header_view"
         app:queryHint="Buscar salão..." />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -86,12 +86,10 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_view"
-        tools:itemCount="4"
+        app:layout_constraintTop_toBottomOf="@+id/txv_saloes_disponiveis"
         tools:listitem="@layout/item_salao_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

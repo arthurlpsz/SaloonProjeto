@@ -13,6 +13,15 @@
         <action
             android:id="@+id/action_salao_dashboard_to_salao_gerenciar"
             app:destination="@id/navigation_salao_gerenciar" />
+        <action
+            android:id="@+id/action_salao_dashboard_to_salao_adicionar"
+            app:destination="@id/navigation_salao_adicionar" />
+        <action
+            android:id="@+id/action_servicos_to_agendamentos"
+            app:destination="@id/navigation_agendamentos" />
+        <action
+            android:id="@+id/action_servicos_to_perfil"
+            app:destination="@id/navigation_salao_perfil" />
     </fragment>
 
     <fragment
@@ -35,7 +44,14 @@
         android:id="@+id/navigation_agendamentos"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.MeusAgendamentosFragment"
         android:label="Agendamentos"
-        tools:layout="@layout/fragment_meus_agendamentos" />
+        tools:layout="@layout/fragment_meus_agendamentos" >
+        <action
+            android:id="@+id/action_agendamentos_to_servicos"
+            app:destination="@id/navigation_salao_servicos" />
+        <action
+            android:id="@+id/action_agendamentos_to_perfil"
+            app:destination="@id/navigation_salao_perfil" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_salao_perfil"
@@ -45,6 +61,12 @@
         <action
             android:id="@+id/action_perfilFragment_to_editarPerfilFragment"
             app:destination="@id/navigation_editar_perfil" />
+        <action
+            android:id="@+id/action_perfil_to_servicos"
+            app:destination="@id/navigation_salao_servicos" />
+        <action
+            android:id="@+id/action_perfil_to_agendamentos"
+            app:destination="@id/navigation_agendamentos" />
     </fragment>
 
     <fragment

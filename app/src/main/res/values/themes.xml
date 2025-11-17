@@ -3,6 +3,7 @@
     <style name="Base.Theme.SaloonProjeto" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Apply the custom style to all BottomNavigationViews in the app -->
         <item name="bottomNavigationStyle">@style/App.BottomNavigationView</item>
+        <item name="searchViewStyle">@style/App.SearchView</item>
     </style>
 
     <style name="Theme.SaloonProjeto" parent="Base.Theme.SaloonProjeto" />
@@ -18,6 +19,11 @@
     <!-- Custom Style for the Active Indicator -->
     <style name="App.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/indicator_blue</item>
+    </style>
+
+    <!-- Custom Style for SearchView -->
+    <style name="App.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="queryBackground">@android:color/transparent</item>
     </style>
 
 </resources>

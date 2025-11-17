@@ -1,4 +1,4 @@
-package br.edu.fatecpg.saloonprojeto.fragments
+package br.edu.fatecpg.saloonprojeto.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

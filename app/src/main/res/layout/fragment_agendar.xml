@@ -23,12 +23,12 @@
             android:layout_marginStart="16dp"
             android:contentDescription="@string/seta_para_voltar"
             android:src="@drawable/voltar"
-            app:layout_constraintBottom_toBottomOf="@+id/title"
+            app:layout_constraintBottom_toBottomOf="@+id/txv_saloes_disponiveis"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/title" />
+            app:layout_constraintTop_toTopOf="@+id/txv_saloes_disponiveis" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/txv_saloes_disponiveis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -52,7 +52,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
+            app:layout_constraintTop_toBottomOf="@+id/txv_saloes_disponiveis" />
 
         <TextView
             android:id="@+id/salon_name"

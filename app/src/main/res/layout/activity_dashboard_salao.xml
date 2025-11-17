@@ -22,7 +22,7 @@
         android:id="@+id/salao_bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/petrol_blue"
+        android:background="@drawable/rounded_menu_background"
         app:itemActiveIndicatorStyle="@style/App.BottomNavigationView.ActiveIndicator"
         app:itemIconTint="@color/bottom_nav_icon_color_selector"
         app:itemTextColor="@color/bottom_nav_item_color_selector"
