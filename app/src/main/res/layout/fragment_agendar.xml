@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:paddingBottom="16dp"
-        tools:context=".fragments.AgendaFragment">
+        tools:context=".fragments.AgendarFragment">
 
         <!-- 🔹 Cabeçalho -->
         <ImageView
@@ -118,6 +118,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/service_name" />
 
+        <!-- 🔹 Preço do serviço -->
+        <TextView
+            android:id="@+id/service_price_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Preço:"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/separator1" />
+
+        <TextView
+            android:id="@+id/service_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/service_price_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/service_price_label"
+            tools:text="R$ 29,90" />
+
+        <View
+            android:id="@+id/separator_price"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/service_price" />
+
         <!-- 🔹 Seleção de data -->
         <TextView
             android:id="@+id/date_label"
@@ -130,7 +169,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/separator1" />
+            app:layout_constraintTop_toBottomOf="@+id/separator_price" />
 
         <LinearLayout
             android:id="@+id/date_button_layout"

@@ -10,4 +10,7 @@
     <item name="btn_outro_dia" type="id" />
     <item name="separator2" type="id" />
     <item name="time_label" type="id" />
+    <item name="button" type="id" />
+    <item name="action_dashboardCliente_to_salaoServicos" type="id" />
+    <item name="btn_ver_servicos" type="id" />
 </resources>
