@@ -19,6 +19,7 @@ class PerfilFragment : Fragment() {
 
     private lateinit var nomePerfil: TextView
     private lateinit var emailPerfil: TextView
+    private lateinit var telefonePerfil: TextView
     private lateinit var btnLogout: Button
 
     private lateinit var auth: FirebaseAuth
@@ -40,6 +41,7 @@ class PerfilFragment : Fragment() {
 
         nomePerfil = view.findViewById(R.id.txv_nome)
         emailPerfil = view.findViewById(R.id.txv_email)
+        telefonePerfil = view.findViewById(R.id.txv_telefone)
         btnLogout = view.findViewById(R.id.btn_logout)
 
         val editProfileButton = view.findViewById<Button>(R.id.btn_editar_perfil)
@@ -59,6 +61,25 @@ class PerfilFragment : Fragment() {
         loadUserProfile()
     }
 
+    private fun formatPhoneNumber(phone: String): String {
+        val digits = phone.replace(Regex("[^0-9]"), "")
+        if (digits.length < 10) {
+            return phone // return original if not enough digits to format
+        }
+
+        val ddd = digits.substring(0, 2)
+        val numberPart = digits.substring(2)
+
+        val formattedNumber = if (numberPart.length == 9) {
+            "${numberPart.substring(0, 5)}-${numberPart.substring(5)}"
+        } else {
+            // Assuming 8 digits for the number part if not 9
+            "${numberPart.substring(0, 4)}-${numberPart.substring(4)}"
+        }
+
+        return "($ddd) $formattedNumber"
+    }
+
     private fun loadUserProfile() {
         val userId = auth.currentUser?.uid
         if (userId != null) {
@@ -72,6 +93,10 @@ class PerfilFragment : Fragment() {
                             nomePerfil.text = document.getString("nome")
                         }
                         emailPerfil.text = document.getString("email")
+                        val telefone = document.getString("telefone")
+                        if (telefone != null) {
+                            telefonePerfil.text = formatPhoneNumber(telefone)
+                        }
 
                     }
                 }

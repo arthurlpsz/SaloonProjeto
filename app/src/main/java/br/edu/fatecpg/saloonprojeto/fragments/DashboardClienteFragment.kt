@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.adapter.SalaoAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class DashboardClienteFragment : Fragment() {
@@ -18,6 +20,9 @@ class DashboardClienteFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: SalaoAdapter
     private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
+
+    private lateinit var userNameTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +31,7 @@ class DashboardClienteFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_dashboard_cliente, container, false)
 
+        userNameTextView = view.findViewById(R.id.user_name)
         recyclerView = view.findViewById(R.id.salons_recycler_view)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
@@ -37,9 +43,21 @@ class DashboardClienteFragment : Fragment() {
 
         recyclerView.adapter = adapter
 
+        carregarDadosUsuario()
         carregarSaloes()
 
         return view
+    }
+
+    private fun carregarDadosUsuario() {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("usuarios").document(userId).get()
+                .addOnSuccessListener { doc ->
+                    val nome = doc.getString("nome") ?: "Usuário"
+                    userNameTextView.text = nome
+                }
+        }
     }
 
     private fun carregarSaloes() {

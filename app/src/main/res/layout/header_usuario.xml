@@ -40,5 +40,4 @@
         app:layout_constraintBottom_toBottomOf="@+id/profile_image"
         app:layout_constraintStart_toStartOf="@+id/welcome_message"
         app:layout_constraintTop_toBottomOf="@+id/welcome_message" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

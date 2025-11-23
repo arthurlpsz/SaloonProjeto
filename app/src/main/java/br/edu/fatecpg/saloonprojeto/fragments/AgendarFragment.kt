@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.adapter.TimeSlotAdapter
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
 import java.util.*
+import java.util.Locale
 
 class AgendarFragment : Fragment() {
 
@@ -22,6 +24,8 @@ class AgendarFragment : Fragment() {
     private lateinit var salonName: TextView
     private lateinit var serviceName: TextView
     private lateinit var servicePrice: TextView
+    private lateinit var selectedDate: TextView
+    private lateinit var ivBack: ImageView
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var timeAdapter: TimeSlotAdapter
@@ -51,6 +55,8 @@ class AgendarFragment : Fragment() {
         salonName = view.findViewById(R.id.salon_name)
         serviceName = view.findViewById(R.id.service_name)
         servicePrice = view.findViewById(R.id.service_price)
+        selectedDate = view.findViewById(R.id.selected_date)
+        ivBack = view.findViewById(R.id.iv_back)
 
         btnHoje = view.findViewById(R.id.btn_hoje)
         btnAmanha = view.findViewById(R.id.btn_amanha)
@@ -69,6 +75,10 @@ class AgendarFragment : Fragment() {
         carregarDadosSalao()
         carregarDadosServico()
         configurarSelecaoDatas()
+
+        ivBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         btnConfirmar.setOnClickListener {
             confirmarAgendamento()
@@ -95,9 +105,14 @@ class AgendarFragment : Fragment() {
     /** DATAS **/
     private fun configurarSelecaoDatas() {
         val calendar = Calendar.getInstance()
+        updateDateLabel(calendar) // Define a data de hoje inicialmente
+        dataSelecionada = formatarData(calendar)
+        carregarHorarios()
 
         btnHoje.setOnClickListener {
-            dataSelecionada = formatarData(calendar)
+            val today = Calendar.getInstance()
+            dataSelecionada = formatarData(today)
+            updateDateLabel(today)
             carregarHorarios()
         }
 
@@ -105,23 +120,31 @@ class AgendarFragment : Fragment() {
             val tomorrow = Calendar.getInstance()
             tomorrow.add(Calendar.DAY_OF_MONTH, 1)
             dataSelecionada = formatarData(tomorrow)
+            updateDateLabel(tomorrow)
             carregarHorarios()
         }
 
         btnOutroDia.setOnClickListener {
+            val currentCalendar = Calendar.getInstance()
             DatePickerDialog(
                 requireContext(),
                 { _, year, month, day ->
                     val date = Calendar.getInstance()
                     date.set(year, month, day)
                     dataSelecionada = formatarData(date)
+                    updateDateLabel(date)
                     carregarHorarios()
                 },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
+                currentCalendar.get(Calendar.YEAR),
+                currentCalendar.get(Calendar.MONTH),
+                currentCalendar.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
+    }
+
+    private fun updateDateLabel(cal: Calendar) {
+        val sdf = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale("pt", "BR"))
+        selectedDate.text = sdf.format(cal.time)
     }
 
     private fun formatarData(cal: Calendar): String {

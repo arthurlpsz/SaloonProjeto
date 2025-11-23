@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
-import com.bumptech.glide.Glide
 
 class SalaoAdapter(
     private var saloes: List<HashMap<String, Any>>,
@@ -16,9 +15,9 @@ class SalaoAdapter(
 ) : RecyclerView.Adapter<SalaoAdapter.SalaoViewHolder>() {
 
     inner class SalaoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val salonImage: ImageView = view.findViewById(R.id.salon_image)
-        val salonName: TextView = view.findViewById(R.id.salon_name_text)
-        val salonDistance: TextView = view.findViewById(R.id.salon_distance_text)
+        val salonImage: ImageView = view.findViewById(R.id.img_salao)
+        val salonName: TextView = view.findViewById(R.id.txv_nome_salao)
+        val salonDistance: TextView = view.findViewById(R.id.txv_endereco_salao)
         val btnVerServicos: AppCompatButton = view.findViewById(R.id.btn_ver_servicos)
     }
 
@@ -42,16 +41,7 @@ class SalaoAdapter(
         holder.salonName.text = nome
         holder.salonDistance.text = endereco
 
-        val imagemUrl = salao["fotoUrl"] as? String
-
-        if (!imagemUrl.isNullOrEmpty()) {
-            Glide.with(holder.itemView.context)
-                .load(imagemUrl)
-                .placeholder(R.drawable.ic_launcher_background)
-                .into(holder.salonImage)
-        } else {
-            holder.salonImage.setImageResource(R.drawable.ic_launcher_background)
-        }
+        holder.salonImage.setImageResource(R.drawable.salao_feminino)
 
         val salaoId = salao["id"] as? String ?: return
 

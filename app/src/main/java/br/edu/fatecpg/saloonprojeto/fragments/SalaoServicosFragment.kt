@@ -37,7 +37,7 @@ class SalaoServicosFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_salao_servicos, container, false)
 
-        salonImage = view.findViewById(R.id.salon_image)
+        salonImage = view.findViewById(R.id.img_salao)
         salonName = view.findViewById(R.id.salon_name)
         salonAddress = view.findViewById(R.id.salon_address)
         recyclerView = view.findViewById(R.id.services_recycler_view)

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -29,7 +30,6 @@ class SalaoDashboardFragment : Fragment() {
     ): View? {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_dashboard_salao, container, false)
     }
 
@@ -37,27 +37,24 @@ class SalaoDashboardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val user = auth.currentUser
-        val userNameTextView = view.findViewById<TextView>(R.id.user_name)
+        val salaoNameTextView = view.findViewById<TextView>(R.id.salon_name)
+        val salaoAddressTextView = view.findViewById<TextView>(R.id.salon_address)
+        val salaoImageView = view.findViewById<ImageView>(R.id.img_salao)
 
+        // Set default image
+        salaoImageView.setImageResource(R.drawable.salao_feminino)
+
+        // Load salon data
         if (user != null) {
             db.collection("usuarios").document(user.uid).get()
                 .addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
-                        val userType = document.getString("tipo")
-                        val name = if (userType == "salao") {
-                            document.getString("nomeSalao")
-                        } else {
-                            document.getString("nome")
-                        }
-                        userNameTextView.text = name ?: user.displayName // Fallback to displayName
-                    } else {
-                        // Fallback to displayName if firestore doc doesn't exist
-                        userNameTextView.text = user.displayName
+                        val name = document.getString("nomeSalao")
+                        salaoNameTextView.text = name ?: "Salão"
+
+                        val endereco = document.getString("endereco")
+                        salaoAddressTextView.text = endereco ?: "Endereço não informado"
                     }
-                }
-                .addOnFailureListener {
-                    // Fallback to displayName on failure
-                    userNameTextView.text = user.displayName
                 }
         }
 
@@ -79,7 +76,6 @@ class SalaoDashboardFragment : Fragment() {
         db.collection("servicos").whereEqualTo("salaoId", salaoId)
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
-                    // Handle error
                     return@addSnapshotListener
                 }
 

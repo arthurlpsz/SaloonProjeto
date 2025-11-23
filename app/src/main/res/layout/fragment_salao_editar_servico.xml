@@ -154,11 +154,11 @@
         <Button
             android:id="@+id/btn_save_service"
             android:layout_width="0dp"
-            android:layout_height="52dp"
+            android:layout_height="56dp"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:backgroundTint="@color/gold"
-            android:text="Salvar Alterações"
+            android:text="Salvar"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:cornerRadius="12dp" />
