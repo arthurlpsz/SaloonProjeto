@@ -55,9 +55,9 @@
 
     <fragment
         android:id="@+id/navigation_agendamentos"
-        android:name="br.edu.fatecpg.saloonprojeto.fragments.MeusAgendamentosFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoAgendamentosFragment"
         android:label="Agendamentos"
-        tools:layout="@layout/fragment_meus_agendamentos" >
+        tools:layout="@layout/fragment_salao_agendamentos" >
         <action
             android:id="@+id/action_agendamentos_to_servicos"
             app:destination="@id/navigation_salao_servicos" />

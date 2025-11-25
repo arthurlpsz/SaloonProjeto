@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,7 +17,7 @@ import br.edu.fatecpg.saloonprojeto.model.Agendamento
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MeusAgendamentosFragment : Fragment() {
+class SalaoAgendamentosFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: AgendamentoAdapter
@@ -27,48 +26,33 @@ class MeusAgendamentosFragment : Fragment() {
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
-    private lateinit var userNameTextView: TextView
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_meus_agendamentos, container, false)
-        recyclerView = view.findViewById(R.id.bookings_recycler_view)
+        val view = inflater.inflate(R.layout.fragment_salao_agendamentos, container, false)
+        recyclerView = view.findViewById(R.id.salao_bookings_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        userNameTextView = view.findViewById(R.id.user_name)
-        
-        adapter = AgendamentoAdapter(listItems, AgendamentoViewType.CLIENTE) { agendamento ->
+
+        adapter = AgendamentoAdapter(listItems, AgendamentoViewType.SALAO) { agendamento ->
             cancelarAgendamento(agendamento)
         }
         recyclerView.adapter = adapter
-        
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         carregarAgendamentos()
-        carregarDadosUsuario()
-    }
-
-    private fun carregarDadosUsuario() {
-        val userId = auth.currentUser?.uid
-        if (userId != null) {
-            db.collection("usuarios").document(userId).get()
-                .addOnSuccessListener { doc ->
-                    val nome = doc.getString("nome") ?: "Usuário"
-                    userNameTextView.text = nome
-                }
-        }
     }
 
     private fun carregarAgendamentos() {
-        val userId = auth.currentUser?.uid ?: return
+        val salaoId = auth.currentUser?.uid ?: return
 
         db.collection("agendamentos")
-            .whereEqualTo("userId", userId)
+            .whereEqualTo("salaoId", salaoId)
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     return@addSnapshotListener

@@ -5,102 +5,110 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/navigation_home">
 
-    <!-- HOME / DASHBOARD CLIENTE -->
     <fragment
         android:id="@+id/navigation_home"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.DashboardClienteFragment"
         android:label="Início"
         tools:layout="@layout/fragment_dashboard_cliente">
 
+        <!-- Action for regular users to see a salon's services -->
         <action
-            android:id="@+id/action_home_to_agendamentos"
-            app:destination="@id/navigation_agendamentos" />
-
-        <action
-            android:id="@+id/action_home_to_perfil"
-            app:destination="@id/navigation_perfil" />
-
-        <!-- NOVA ACTION: abrir serviços do salão -->
-        <action
-            android:id="@+id/action_dashboardCliente_to_salaoServicos"
+            android:id="@+id/action_home_to_salaoServicos"
             app:destination="@id/salaoServicosFragment" />
+
+        <!-- Action to auto-redirect salon owners to their dashboard -->
+        <action
+            android:id="@+id/action_home_to_salao_dashboard"
+            app:destination="@id/salaoDashboardFragment"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
     </fragment>
 
-
-    <!-- AGENDAMENTOS -->
     <fragment
         android:id="@+id/navigation_agendamentos"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.MeusAgendamentosFragment"
         android:label="Agendamentos"
-        tools:layout="@layout/fragment_meus_agendamentos">
+        tools:layout="@layout/fragment_meus_agendamentos" />
 
-        <action
-            android:id="@+id/action_agendamentos_to_home"
-            app:destination="@id/navigation_home" />
-
-        <action
-            android:id="@+id/action_agendamentos_to_perfil"
-            app:destination="@id/navigation_perfil" />
-    </fragment>
-
-
-    <!-- PERFIL -->
     <fragment
         android:id="@+id/navigation_perfil"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.PerfilFragment"
         android:label="Perfil"
         tools:layout="@layout/fragment_perfil">
-
         <action
-            android:id="@+id/action_perfilFragment_to_editarPerfilFragment"
-            app:destination="@id/navigation_editar_perfil" />
-
-        <action
-            android:id="@+id/action_perfil_to_home"
-            app:destination="@id/navigation_home" />
-
-        <action
-            android:id="@+id/action_perfil_to_agendamentos"
-            app:destination="@id/navigation_agendamentos" />
+            android:id="@+id/action_perfil_to_editar_perfil"
+            app:destination="@id/editarPerfilFragment" />
     </fragment>
 
-
-    <!-- AGENDAR SERVIÇO -->
     <fragment
-        android:id="@+id/navigation_agendar"
-        android:name="br.edu.fatecpg.saloonprojeto.fragments.AgendarFragment"
-        android:label="Agendar"
-        tools:layout="@layout/fragment_agendar">
-
-        <action
-            android:id="@+id/action_agendarFragment_to_dashboardClienteFragment"
-            app:destination="@id/navigation_home" />
-    </fragment>
-
-
-    <!-- EDITAR PERFIL -->
-    <fragment
-        android:id="@+id/navigation_editar_perfil"
+        android:id="@+id/editarPerfilFragment"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.EditarPerfilFragment"
         android:label="Editar Perfil"
         tools:layout="@layout/fragment_editar_perfil" />
 
 
-    <!-- TELA DE SERVIÇOS DO SALÃO (CLIENTE) -->
+    <!-- =============================================================== -->
+    <!--           FLOW FOR CLIENTS (Regular Users)                      -->
+    <!-- =============================================================== -->
+
     <fragment
         android:id="@+id/salaoServicosFragment"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoServicosFragment"
         android:label="Serviços do Salão"
         tools:layout="@layout/fragment_salao_servicos">
-
         <argument
             android:name="salaoId"
             app:argType="string" />
-
-        <!-- Para ir para agendar serviço -->
         <action
-            android:id="@+id/action_salaoServicosFragment_to_navigation_agendar"
+            android:id="@+id/action_salaoServicosFragment_to_navigation_agendar" 
             app:destination="@id/navigation_agendar" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_agendar"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.AgendarFragment"
+        android:label="Agendar Serviço"
+        tools:layout="@layout/fragment_agendar">
+        <argument
+            android:name="salaoId"
+            app:argType="string" />
+        <argument
+            android:name="servicoId"
+            app:argType="string" />
+    </fragment>
+
+
+    <!-- =============================================================== -->
+    <!--           FLOW FOR SALON OWNERS                                   -->
+    <!-- =============================================================== -->
+
+    <fragment
+        android:id="@+id/salaoDashboardFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoDashboardFragment"
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard_salao">
+        <action
+            android:id="@+id/action_salaoDashboard_to_addServico"
+            app:destination="@id/salaoAdicionarServicoFragment" />
+        <action
+            android:id="@+id/action_salaoDashboard_to_editServico"
+            app:destination="@id/salaoEditarServicoFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/salaoAdicionarServicoFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoAdicionarServicoFragment"
+        android:label="Adicionar Serviço"
+        tools:layout="@layout/fragment_salao_adicionar_servico" />
+
+    <fragment
+        android:id="@+id/salaoEditarServicoFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoEditarServicoFragment"
+        android:label="Editar Serviço"
+        tools:layout="@layout/fragment_salao_editar_servico">
+        <argument
+            android:name="servicoId"
+            app:argType="string" />
     </fragment>
 
 </navigation>

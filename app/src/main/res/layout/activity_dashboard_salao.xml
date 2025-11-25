@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".SalaoActivity">
 
+    <include
+        android:id="@+id/header_usuario"
+        layout="@layout/header_usuario"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/salao_nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -16,7 +23,7 @@
         app:layout_constraintBottom_toTopOf="@+id/salao_bottom_navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/header_usuario" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/salao_bottom_navigation"

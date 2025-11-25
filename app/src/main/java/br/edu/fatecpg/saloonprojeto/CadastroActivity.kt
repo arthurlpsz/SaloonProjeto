@@ -56,9 +56,22 @@ class CadastroActivity : AppCompatActivity() {
             val email = emailField.text.toString().trim()
             val password = passwordField.text.toString().trim()
             val phone = phoneField.text.toString().trim()
+            val name = nameField.text.toString().trim()
+            val salonName = salonNameField.text.toString().trim()
+            val address = addressField.text.toString().trim()
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Preencha todos os campos obrigatórios", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Preencha e-mail e senha", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (isClientSelected && name.isEmpty()) {
+                Toast.makeText(this, "Por favor, preencha o seu nome.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (!isClientSelected && salonName.isEmpty()) {
+                Toast.makeText(this, "Por favor, preencha o nome do salão.", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -74,10 +87,10 @@ class CadastroActivity : AppCompatActivity() {
                     )
 
                     if (isClientSelected) {
-                        userData["nome"] = nameField.text.toString().trim()
+                        userData["nome"] = name
                     } else {
-                        userData["nomeSalao"] = salonNameField.text.toString().trim()
-                        userData["endereco"] = addressField.text.toString().trim()
+                        userData["nomeSalao"] = salonName
+                        userData["endereco"] = address
                     }
 
                     // Salvar no Firestore
@@ -95,7 +108,6 @@ class CadastroActivity : AppCompatActivity() {
                             startActivity(intent)
                             finish()
                         }
-                        // 🔧 Aqui está o trecho que você pediu:
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "Erro ao salvar dados no Firestore: ${e.message}", Toast.LENGTH_LONG).show()
                             e.printStackTrace()

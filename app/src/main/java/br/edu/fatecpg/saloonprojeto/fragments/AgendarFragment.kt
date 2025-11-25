@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.adapter.TimeSlotAdapter
+import br.edu.fatecpg.saloonprojeto.model.Agendamento
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,6 +22,7 @@ import java.util.Locale
 class AgendarFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     private lateinit var salonName: TextView
     private lateinit var serviceName: TextView
@@ -156,25 +159,82 @@ class AgendarFragment : Fragment() {
 
     /** HORÁRIOS **/
     private fun carregarHorarios() {
-        val horarios = listOf(
+        val todosHorarios = listOf(
             "08:00", "09:00", "10:00",
             "11:00", "12:00", "13:00",
             "14:00", "15:00", "16:00",
             "17:00"
         )
 
-        timeAdapter.updateList(horarios)
+        val hoje = Calendar.getInstance()
+        val sdfCompare = SimpleDateFormat("dd/MM/yyyy", Locale("pt", "BR"))
+        val dataHojeString = sdfCompare.format(hoje.time)
+
+        val horariosFiltrados = if (dataSelecionada == dataHojeString) {
+            val horaAtual = hoje.get(Calendar.HOUR_OF_DAY)
+            todosHorarios.filter { horario ->
+                val horaDoSlot = horario.substringBefore(':').toInt()
+                horaDoSlot > horaAtual
+            }
+        } else {
+            todosHorarios
+        }
+
+        timeAdapter.updateList(horariosFiltrados)
     }
 
     /** CONFIRMAR **/
     private fun confirmarAgendamento() {
+        val userId = auth.currentUser?.uid
         if (dataSelecionada.isEmpty() || horarioSelecionado.isEmpty()) {
             Toast.makeText(requireContext(), "Selecione data e horário", Toast.LENGTH_SHORT).show()
             return
         }
+        if (userId == null) {
+            Toast.makeText(requireContext(), "Você precisa estar logado para agendar", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        Toast.makeText(requireContext(), "Agendamento confirmado!", Toast.LENGTH_LONG).show()
+        db.collection("usuarios").document(userId).get().addOnSuccessListener { document ->
+            var nomeUsuario = document.getString("nome") ?: document.getString("name")
+            if (nomeUsuario.isNullOrEmpty()) {
+                nomeUsuario = "Usuário não identificado"
+            }
 
-        findNavController().navigate(R.id.navigation_home)
+            val dateTimeString = "$dataSelecionada $horarioSelecionado"
+            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale("pt", "BR"))
+            val date = try {
+                sdf.parse(dateTimeString)
+            } catch (e: Exception) {
+                null
+            }
+
+            if (date == null) {
+                Toast.makeText(requireContext(), "Formato de data ou hora inválido.", Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
+            }
+            val timestamp = com.google.firebase.Timestamp(date)
+
+            val agendamento = Agendamento(
+                userId = userId,
+                salaoId = salaoId,
+                nomeUsuario = nomeUsuario,
+                nomeSalao = salonName.text.toString(),
+                data = timestamp,
+                servico = serviceName.text.toString(),
+                status = "Confirmado"
+            )
+
+            db.collection("agendamentos").add(agendamento)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Agendamento confirmado!", Toast.LENGTH_LONG).show()
+                    findNavController().navigate(R.id.navigation_home)
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(requireContext(), "Erro ao criar agendamento: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        }.addOnFailureListener { e ->
+            Toast.makeText(requireContext(), "Erro ao buscar dados do usuário: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 }

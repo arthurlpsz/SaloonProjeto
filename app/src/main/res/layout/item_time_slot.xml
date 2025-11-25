@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_time_slot"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="6dp"
+    android:layout_margin="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/time_slot_background_selector"
+    app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
-    app:cardCornerRadius="10dp">
+    app:layout_constraintHeight="48dp"
+    app:strokeColor="@color/gold"
+    app:strokeWidth="1dp">
 
     <TextView
         android:id="@+id/txt_horario"
-        android:layout_width="80dp"
-        android:layout_height="45dp"
+        android:layout_width="85dp"
+        android:layout_height="48dp"
         android:gravity="center"
-        android:text="13:00"
+        android:textColor="@color/time_slot_text_selector"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
-        android:background="@drawable/default_time_slot" />
+        tools:text="13:00" />
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

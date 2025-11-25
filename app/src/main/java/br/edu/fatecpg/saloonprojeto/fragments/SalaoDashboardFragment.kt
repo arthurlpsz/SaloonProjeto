@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.adapter.ServicoAdapter
+import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -41,19 +42,23 @@ class SalaoDashboardFragment : Fragment() {
         val salaoAddressTextView = view.findViewById<TextView>(R.id.salon_address)
         val salaoImageView = view.findViewById<ImageView>(R.id.img_salao)
 
-        // Set default image
-        salaoImageView.setImageResource(R.drawable.salao_feminino)
-
         // Load salon data
         if (user != null) {
             db.collection("usuarios").document(user.uid).get()
                 .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
+                    if (document != null && document.exists() && isAdded) {
                         val name = document.getString("nomeSalao")
                         salaoNameTextView.text = name ?: "Salão"
 
                         val endereco = document.getString("endereco")
                         salaoAddressTextView.text = endereco ?: "Endereço não informado"
+
+                        val fotoUrl = document.getString("fotoUrl")
+                        Glide.with(this@SalaoDashboardFragment)
+                            .load(fotoUrl)
+                            .placeholder(R.drawable.salao_feminino)
+                            .error(R.drawable.salao_feminino) // Imagem de erro
+                            .into(salaoImageView)
                     }
                 }
         }

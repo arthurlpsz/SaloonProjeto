@@ -14,12 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.adapter.ServicoClienteAdapter
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 
 class SalaoServicosFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     private lateinit var salonImage: ImageView
     private lateinit var salonName: TextView
@@ -96,13 +98,12 @@ class SalaoServicosFragment : Fragment() {
 
         val foto = (data["fotoUrl"] as? String)
             ?: (data["imagemUrl"] as? String)
-            ?: ""
 
         salonName.text = nome
         salonAddress.text = endereco
 
         Glide.with(requireContext())
-            .load(foto.ifEmpty { null })          // se não houver imagem, Glide usa placeholder
+            .load(if (foto.isNullOrEmpty()) null else foto) // se não houver imagem, Glide usa placeholder
             .placeholder(android.R.drawable.ic_menu_gallery)
             .error(android.R.drawable.ic_menu_gallery)
             .into(salonImage)
