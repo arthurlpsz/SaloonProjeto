@@ -1,120 +1,116 @@
 package br.edu.fatecpg.saloonprojeto.fragments
 
-import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
-import com.google.android.material.button.MaterialButton
+import br.edu.fatecpg.saloonprojeto.adapters.DiaHorario
+import br.edu.fatecpg.saloonprojeto.adapters.HorarioAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.Calendar
-import java.util.Locale
 
 class SalaoHorariosFragment : Fragment() {
 
-    private lateinit var btnOpenTime: MaterialButton
-    private lateinit var btnCloseTime: MaterialButton
-    private lateinit var btnSalvar: MaterialButton
+    private lateinit var recycler: RecyclerView
+    private lateinit var adapter: HorarioAdapter
 
-    private lateinit var db: FirebaseFirestore
+    private val diasSemana = listOf(
+        "Segunda-feira",
+        "Terça-feira",
+        "Quarta-feira",
+        "Quinta-feira",
+        "Sexta-feira",
+        "Sábado",
+        "Domingo"
+    )
+
     private lateinit var auth: FirebaseAuth
-
-    private var horarioInicio: String? = null
-    private var horarioFim: String? = null
-
-    private var salaoId: String? = null // Pode ser o UID do salão
+    private lateinit var db: FirebaseFirestore
+    private var userId: String? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_salao_horarios, container, false)
-
-        btnOpenTime = view.findViewById(R.id.btn_open_time)
-        btnCloseTime = view.findViewById(R.id.btn_close_time)
-        btnSalvar = view.findViewById(R.id.btn_salvar_horarios)
-
-        db = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
-        salaoId = auth.currentUser?.uid // simplificação: o UID é o ID do salão
-
-        btnOpenTime.setOnClickListener { showTimePicker(true) }
-        btnCloseTime.setOnClickListener { showTimePicker(false) }
-        btnSalvar.setOnClickListener { salvarHorarios() }
-
-        carregarHorariosExistentes()
-
-        return view
+        return inflater.inflate(R.layout.fragment_salao_horarios, container, false)
     }
 
-    private fun showTimePicker(isOpening: Boolean) {
-        val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val picker = TimePickerDialog(
-            requireContext(),
-            { _, selectedHour, selectedMinute ->
-                val timeString = String.format(Locale.getDefault(), "%02d:%02d", selectedHour, selectedMinute)
-                if (isOpening) {
-                    horarioInicio = timeString
-                    btnOpenTime.text = "Abertura: $timeString"
-                } else {
-                    horarioFim = timeString
-                    btnCloseTime.text = "Fechamento: $timeString"
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
+        userId = auth.currentUser?.uid
+
+        val back = view.findViewById<ImageView>(R.id.iv_back)
+        back.setOnClickListener { findNavController().navigateUp() }
+
+        recycler = view.findViewById(R.id.rv_horarios)
+
+        adapter = HorarioAdapter(diasSemana.map { DiaHorario(it) })
+        recycler.layoutManager = LinearLayoutManager(requireContext())
+        recycler.adapter = adapter
+
+        val btnSalvar = view.findViewById<Button>(R.id.btn_salvar_horarios)
+        btnSalvar.setOnClickListener {
+            salvarHorarios()
+        }
+
+        carregarHorarios()
+    }
+
+    private fun carregarHorarios() {
+        userId?.let { uid ->
+            db.collection("usuarios").document(uid)
+                .get()
+                .addOnSuccessListener { doc ->
+                    if (doc.contains("horarios")) {
+                        val horarios = doc.get("horarios") as Map<String, Map<String, Any>>
+
+                        horarios.forEach { (dia, dados) ->
+                            val item = adapter.getHorarios().find { it.dia == dia }
+                            if (item != null) {
+                                item.abre = dados["abre"] as? String ?: ""
+                                item.fecha = dados["fecha"] as? String ?: ""
+                                item.fechado = dados["fechado"] as? Boolean ?: false
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged()
+                    }
                 }
-            },
-            hour,
-            minute,
-            true
-        )
-        picker.show()
+        }
     }
 
     private fun salvarHorarios() {
-        val id = salaoId ?: return
-        val inicio = horarioInicio
-        val fim = horarioFim
+        val horariosFirestore = hashMapOf<String, Any>()
 
-        if (inicio.isNullOrEmpty() || fim.isNullOrEmpty()) {
-            Toast.makeText(requireContext(), "Selecione os dois horários", Toast.LENGTH_SHORT).show()
-            return
+        adapter.getHorarios().forEach {
+            horariosFirestore[it.dia] = hashMapOf(
+                "abre" to it.abre,
+                "fecha" to it.fecha,
+                "fechado" to it.fechado
+            )
         }
 
-        val horarios = mapOf(
-            "horarioInicio" to inicio,
-            "horarioFim" to fim
-        )
-
-        db.collection("saloes").document(id)
-            .set(horarios, com.google.firebase.firestore.SetOptions.merge())
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Horários salvos com sucesso!", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), "Erro ao salvar horários.", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun carregarHorariosExistentes() {
-        val id = salaoId ?: return
-        db.collection("saloes").document(id).get()
-            .addOnSuccessListener { doc ->
-                if (doc.exists()) {
-                    horarioInicio = doc.getString("horarioInicio")
-                    horarioFim = doc.getString("horarioFim")
-
-                    btnOpenTime.text = "Abertura: ${horarioInicio ?: "Não definido"}"
-                    btnCloseTime.text = "Fechamento: ${horarioFim ?: "Não definido"}"
+        userId?.let { uid ->
+            db.collection("usuarios").document(uid)
+                .update("horarios", horariosFirestore)
+                .addOnSuccessListener {
+                    Toast.makeText(requireContext(), "Horários salvos!", Toast.LENGTH_SHORT).show()
+                    findNavController().navigateUp()
                 }
-            }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), "Erro ao carregar horários", Toast.LENGTH_SHORT).show()
-            }
+                .addOnFailureListener {
+                    Toast.makeText(requireContext(), "Erro ao salvar horários", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 }

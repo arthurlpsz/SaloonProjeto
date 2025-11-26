@@ -1,3 +1,4 @@
+// AgendarFragment.kt
 package br.edu.fatecpg.saloonprojeto.fragments
 
 import android.app.DatePickerDialog
@@ -7,234 +8,293 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
-import br.edu.fatecpg.saloonprojeto.adapter.TimeSlotAdapter
-import br.edu.fatecpg.saloonprojeto.model.Agendamento
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.Locale
 
+/*
+  LAYOUT EXPECTED (ajuste se necessário):
+  - TextView txv_selected_date
+  - Button btn_pick_date
+  - Button btn_load_slots
+  - RecyclerView rv_slots
+  - (Recycler item layout: textview slot_time)
+*/
 class AgendarFragment : Fragment() {
+
+    private lateinit var tvSelectedDate: TextView
+    private lateinit var btnPickDate: Button
+    private lateinit var btnLoadSlots: Button
+    private lateinit var rvSlots: RecyclerView
+    private var selectedDate: Calendar = Calendar.getInstance()
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
-    private lateinit var salonName: TextView
-    private lateinit var serviceName: TextView
-    private lateinit var servicePrice: TextView
-    private lateinit var selectedDate: TextView
-    private lateinit var ivBack: ImageView
+    private var salaoId: String? = null
+    private var servicoId: String? = null
+    private var servicoDuracaoMin: Int = 45 // default, will load real value
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var timeAdapter: TimeSlotAdapter
+    private lateinit var slotsAdapter: SlotsAdapter
+    private var availableSlots: MutableList<Int> = mutableListOf() // minutes of day
 
-    private lateinit var btnHoje: Button
-    private lateinit var btnAmanha: Button
-    private lateinit var btnOutroDia: Button
-    private lateinit var btnConfirmar: Button
-
-    private var salaoId: String = ""
-    private var servicoId: String = ""
-    private var dataSelecionada: String = ""
-    private var horarioSelecionado: String = ""
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            salaoId = it.getString("salaoId")
+            servicoId = it.getString("servicoId")
+        }
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_agendar, container, false)
-
-        // Recebendo parâmetros
-        salaoId = arguments?.getString("salaoId") ?: ""
-        servicoId = arguments?.getString("servicoId") ?: ""
-
-        // Views
-        salonName = view.findViewById(R.id.salon_name)
-        serviceName = view.findViewById(R.id.service_name)
-        servicePrice = view.findViewById(R.id.service_price)
-        selectedDate = view.findViewById(R.id.selected_date)
-        ivBack = view.findViewById(R.id.iv_back)
-
-        btnHoje = view.findViewById(R.id.btn_hoje)
-        btnAmanha = view.findViewById(R.id.btn_amanha)
-        btnOutroDia = view.findViewById(R.id.btn_outro_dia)
-        btnConfirmar = view.findViewById(R.id.btn_confirmar_agendamento)
-
-        recyclerView = view.findViewById(R.id.time_slots_recycler_view)
-        recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-
-        // Adapter para horários
-        timeAdapter = TimeSlotAdapter { horario ->
-            horarioSelecionado = horario
-        }
-        recyclerView.adapter = timeAdapter
-
-        carregarDadosSalao()
-        carregarDadosServico()
-        configurarSelecaoDatas()
-
-        ivBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        btnConfirmar.setOnClickListener {
-            confirmarAgendamento()
-        }
-
-        return view
+        return inflater.inflate(R.layout.fragment_agendar, container, false)
     }
 
-    private fun carregarDadosSalao() {
-        db.collection("usuarios").document(salaoId).get()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        tvSelectedDate = view.findViewById(R.id.txv_selected_date)
+        btnPickDate = view.findViewById(R.id.btn_pick_date)
+        btnLoadSlots = view.findViewById(R.id.btn_load_slots)
+        rvSlots = view.findViewById(R.id.rv_slots)
+
+        rvSlots.layoutManager = LinearLayoutManager(requireContext())
+        slotsAdapter = SlotsAdapter { minuteOfDay ->
+            attemptBooking(minuteOfDay)
+        }
+        rvSlots.adapter = slotsAdapter
+
+        updateSelectedDateText()
+
+        btnPickDate.setOnClickListener {
+            pickDate()
+        }
+
+        btnLoadSlots.setOnClickListener {
+            if (salaoId == null || servicoId == null) {
+                Toast.makeText(requireContext(), "Dados do salão/serviço ausentes", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            loadServiceAndSlots()
+        }
+
+        // If nav passed a date (optional), you could set it here
+    }
+
+    private fun updateSelectedDateText() {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        tvSelectedDate.text = sdf.format(selectedDate.time)
+    }
+
+    private fun pickDate() {
+        val c = selectedDate
+        DatePickerDialog(requireContext(), { _, year, month, dayOfMonth ->
+            selectedDate.set(year, month, dayOfMonth)
+            updateSelectedDateText()
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show()
+    }
+
+    private fun loadServiceAndSlots() {
+        // load service to get duration
+        db.collection("servicos").document(servicoId!!)
+            .get()
             .addOnSuccessListener { doc ->
-                salonName.text = doc.getString("nomeSalao") ?: "Salão"
+                servicoDuracaoMin = doc.getLong("duracaoMin")?.toInt() ?: servicoDuracaoMin
+                // now load working hours and existing appointments and compute free slots
+                computeAvailableSlots()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Erro ao carregar serviço: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
-    private fun carregarDadosServico() {
-        db.collection("servicos").document(servicoId).get()
+    private fun computeAvailableSlots() {
+        // 1) load workingHours from salao document
+        db.collection("usuarios").document(salaoId!!)
+            .get()
             .addOnSuccessListener { doc ->
-                serviceName.text = doc.getString("nome") ?: "Serviço"
-                servicePrice.text = "R$ " + (doc.get("preco")?.toString() ?: "0,00")
+                val working = doc.get("workingHours") as? Map<*, *>
+                if (working == null) {
+                    Toast.makeText(requireContext(), "Horários do salão não definidos", Toast.LENGTH_LONG).show()
+                    return@addOnSuccessListener
+                }
+
+                val dayKey = dayKeyFromCalendar(selectedDate)
+                val dayMap = working[dayKey] as? Map<*, *>
+                if (dayMap == null) {
+                    Toast.makeText(requireContext(), "Salão fechado neste dia", Toast.LENGTH_LONG).show()
+                    return@addOnSuccessListener
+                }
+
+                val startMin = (dayMap["start"] as? Long)?.toInt() ?: (dayMap["start"] as? Int) ?: 0
+                val endMin = (dayMap["end"] as? Long)?.toInt() ?: (dayMap["end"] as? Int) ?: 0
+
+                // 2) load existing appointments for the same day
+                val dayStart = (selectedDate.clone() as Calendar).apply {
+                    set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+                }
+                val dayEnd = (dayStart.clone() as Calendar).apply { add(Calendar.DAY_OF_MONTH, 1) }
+
+                db.collection("agendamentos")
+                    .whereEqualTo("salaoId", salaoId)
+                    .whereGreaterThanOrEqualTo("dataInicio", Timestamp(dayStart.time))
+                    .whereLessThan("dataInicio", Timestamp(dayEnd.time))
+                    .get()
+                    .addOnSuccessListener { snap ->
+                        val existing = mutableListOf<Pair<Int, Int>>() // startMin,endMin (minutes of day)
+                        for (d in snap.documents) {
+                            val sTs = d.getTimestamp("dataInicio")?.toDate()
+                            val eTs = d.getTimestamp("dataFim")?.toDate()
+                            if (sTs == null || eTs == null) continue
+                            val sc = Calendar.getInstance().apply { time = sTs }
+                            val ec = Calendar.getInstance().apply { time = eTs }
+                            val sMin = sc.get(Calendar.HOUR_OF_DAY) * 60 + sc.get(Calendar.MINUTE)
+                            val eMin = ec.get(Calendar.HOUR_OF_DAY) * 60 + ec.get(Calendar.MINUTE)
+                            existing.add(Pair(sMin, eMin))
+                        }
+
+                        // compute free slots at 15-minute steps
+                        availableSlots.clear()
+                        var cursor = startMin
+                        while (cursor + servicoDuracaoMin <= endMin) {
+                            val slotStart = cursor
+                            val slotEnd = cursor + servicoDuracaoMin
+                            val overlaps = existing.any { ap -> ap.first < slotEnd && ap.second > slotStart }
+                            if (!overlaps) availableSlots.add(slotStart)
+                            cursor += 15
+                        }
+
+                        // update UI
+                        slotsAdapter.submitList(availableSlots.toList())
+                        if (availableSlots.isEmpty()) {
+                            Toast.makeText(requireContext(), "Nenhum horário disponível neste dia", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(requireContext(), "Erro ao carregar agendamentos: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Erro ao carregar horário do salão: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
-    /** DATAS **/
-    private fun configurarSelecaoDatas() {
-        val calendar = Calendar.getInstance()
-        updateDateLabel(calendar) // Define a data de hoje inicialmente
-        dataSelecionada = formatarData(calendar)
-        carregarHorarios()
-
-        btnHoje.setOnClickListener {
-            val today = Calendar.getInstance()
-            dataSelecionada = formatarData(today)
-            updateDateLabel(today)
-            carregarHorarios()
-        }
-
-        btnAmanha.setOnClickListener {
-            val tomorrow = Calendar.getInstance()
-            tomorrow.add(Calendar.DAY_OF_MONTH, 1)
-            dataSelecionada = formatarData(tomorrow)
-            updateDateLabel(tomorrow)
-            carregarHorarios()
-        }
-
-        btnOutroDia.setOnClickListener {
-            val currentCalendar = Calendar.getInstance()
-            DatePickerDialog(
-                requireContext(),
-                { _, year, month, day ->
-                    val date = Calendar.getInstance()
-                    date.set(year, month, day)
-                    dataSelecionada = formatarData(date)
-                    updateDateLabel(date)
-                    carregarHorarios()
-                },
-                currentCalendar.get(Calendar.YEAR),
-                currentCalendar.get(Calendar.MONTH),
-                currentCalendar.get(Calendar.DAY_OF_MONTH)
-            ).show()
-        }
-    }
-
-    private fun updateDateLabel(cal: Calendar) {
-        val sdf = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale("pt", "BR"))
-        selectedDate.text = sdf.format(cal.time)
-    }
-
-    private fun formatarData(cal: Calendar): String {
-        val d = cal.get(Calendar.DAY_OF_MONTH).toString().padStart(2, '0')
-        val m = (cal.get(Calendar.MONTH) + 1).toString().padStart(2, '0')
-        val y = cal.get(Calendar.YEAR)
-        return "$d/$m/$y"
-    }
-
-    /** HORÁRIOS **/
-    private fun carregarHorarios() {
-        val todosHorarios = listOf(
-            "08:00", "09:00", "10:00",
-            "11:00", "12:00", "13:00",
-            "14:00", "15:00", "16:00",
-            "17:00"
-        )
-
-        val hoje = Calendar.getInstance()
-        val sdfCompare = SimpleDateFormat("dd/MM/yyyy", Locale("pt", "BR"))
-        val dataHojeString = sdfCompare.format(hoje.time)
-
-        val horariosFiltrados = if (dataSelecionada == dataHojeString) {
-            val horaAtual = hoje.get(Calendar.HOUR_OF_DAY)
-            todosHorarios.filter { horario ->
-                val horaDoSlot = horario.substringBefore(':').toInt()
-                horaDoSlot > horaAtual
-            }
-        } else {
-            todosHorarios
-        }
-
-        timeAdapter.updateList(horariosFiltrados)
-    }
-
-    /** CONFIRMAR **/
-    private fun confirmarAgendamento() {
-        val userId = auth.currentUser?.uid
-        if (dataSelecionada.isEmpty() || horarioSelecionado.isEmpty()) {
-            Toast.makeText(requireContext(), "Selecione data e horário", Toast.LENGTH_SHORT).show()
-            return
-        }
-        if (userId == null) {
-            Toast.makeText(requireContext(), "Você precisa estar logado para agendar", Toast.LENGTH_SHORT).show()
+    private fun attemptBooking(minuteOfDay: Int) {
+        val userId = auth.currentUser?.uid ?: run {
+            Toast.makeText(requireContext(), "Usuário não autenticado", Toast.LENGTH_SHORT).show()
             return
         }
 
-        db.collection("usuarios").document(userId).get().addOnSuccessListener { document ->
-            var nomeUsuario = document.getString("nome") ?: document.getString("name")
-            if (nomeUsuario.isNullOrEmpty()) {
-                nomeUsuario = "Usuário não identificado"
-            }
+        val bookingCalStart = (selectedDate.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, minuteOfDay / 60)
+            set(Calendar.MINUTE, minuteOfDay % 60)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }
+        val startTs = Timestamp(bookingCalStart.time)
+        val endMs = bookingCalStart.timeInMillis + servicoDuracaoMin * 60_000L
+        val endTs = Timestamp(Date(endMs))
 
-            val dateTimeString = "$dataSelecionada $horarioSelecionado"
-            val sdf = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale("pt", "BR"))
-            val date = try {
-                sdf.parse(dateTimeString)
-            } catch (e: Exception) {
-                null
-            }
+        // final overlap check and booking creation (atomic enough for this scope)
+        // reuse same overlap check pattern as computeAvailableSlots but for the exact interval
+        val dayStart = (selectedDate.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0); set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+        }
+        val dayEnd = (dayStart.clone() as Calendar).apply { add(Calendar.DAY_OF_MONTH, 1) }
 
-            if (date == null) {
-                Toast.makeText(requireContext(), "Formato de data ou hora inválido.", Toast.LENGTH_SHORT).show()
-                return@addOnSuccessListener
-            }
-            val timestamp = com.google.firebase.Timestamp(date)
-
-            val agendamento = Agendamento(
-                userId = userId,
-                salaoId = salaoId,
-                nomeUsuario = nomeUsuario,
-                nomeSalao = salonName.text.toString(),
-                data = timestamp,
-                servico = serviceName.text.toString(),
-                status = "Confirmado"
-            )
-
-            db.collection("agendamentos").add(agendamento)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Agendamento confirmado!", Toast.LENGTH_LONG).show()
-                    findNavController().navigate(R.id.navigation_home)
+        db.collection("agendamentos")
+            .whereEqualTo("salaoId", salaoId)
+            .whereGreaterThanOrEqualTo("dataInicio", Timestamp(dayStart.time))
+            .whereLessThan("dataInicio", Timestamp(dayEnd.time))
+            .get()
+            .addOnSuccessListener { snap ->
+                for (d in snap.documents) {
+                    val sTs = d.getTimestamp("dataInicio")?.toDate()?.time ?: continue
+                    val eTs = d.getTimestamp("dataFim")?.toDate()?.time ?: continue
+                    if (startTs.toDate().time < eTs && sTs < endTs.toDate().time) {
+                        Toast.makeText(requireContext(), "Horário já reservado (verifique antes de confirmar)", Toast.LENGTH_LONG).show()
+                        return@addOnSuccessListener
+                    }
                 }
-                .addOnFailureListener { e ->
-                    Toast.makeText(requireContext(), "Erro ao criar agendamento: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-        }.addOnFailureListener { e ->
-            Toast.makeText(requireContext(), "Erro ao buscar dados do usuário: ${e.message}", Toast.LENGTH_SHORT).show()
+
+                // create appointment
+                val newAg = hashMapOf(
+                    "salaoId" to salaoId,
+                    "clienteId" to userId,
+                    "servicoId" to servicoId,
+                    "dataInicio" to startTs,
+                    "dataFim" to endTs,
+                    "status" to "agendado",
+                    "createdAt" to Timestamp.now()
+                )
+                db.collection("agendamentos").add(newAg)
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Agendamento criado com sucesso!", Toast.LENGTH_LONG).show()
+                        // optional: navigate back or to "meus agendamentos"
+                        requireActivity().onBackPressed()
+                    }
+                    .addOnFailureListener { e ->
+                        Toast.makeText(requireContext(), "Erro ao criar agendamento: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Erro ao checar conflitos: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun dayKeyFromCalendar(c: Calendar): String {
+        return when (c.get(Calendar.DAY_OF_WEEK)) {
+            Calendar.MONDAY -> "monday"
+            Calendar.TUESDAY -> "tuesday"
+            Calendar.WEDNESDAY -> "wednesday"
+            Calendar.THURSDAY -> "thursday"
+            Calendar.FRIDAY -> "friday"
+            Calendar.SATURDAY -> "saturday"
+            else -> "sunday"
+        }
+    }
+
+    // --- Adapter for slots (simple) ---
+    class SlotsAdapter(private val onClick: (Int) -> Unit) : RecyclerView.Adapter<SlotsAdapter.VH>() {
+        private var list: List<Int> = emptyList()
+        private val fmt = java.text.SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        fun submitList(newList: List<Int>) {
+            list = newList
+            notifyDataSetChanged()
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+            val v = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
+            return VH(v)
+        }
+
+        override fun getItemCount(): Int = list.size
+
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            val mins = list[position]
+            val hour = mins / 60
+            val minute = mins % 60
+            val cal = Calendar.getInstance().apply {
+                set(Calendar.HOUR_OF_DAY, hour)
+                set(Calendar.MINUTE, minute)
+            }
+            holder.tv.text = fmt.format(cal.time)
+            holder.itemView.setOnClickListener { onClick(mins) }
+        }
+
+        class VH(view: View) : RecyclerView.ViewHolder(view) {
+            val tv: TextView = view.findViewById(android.R.id.text1)
         }
     }
 }

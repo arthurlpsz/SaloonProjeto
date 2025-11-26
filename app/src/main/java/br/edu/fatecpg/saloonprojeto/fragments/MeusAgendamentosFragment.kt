@@ -1,114 +1,98 @@
+// MeusAgendamentosFragment.kt
 package br.edu.fatecpg.saloonprojeto.fragments
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
-import br.edu.fatecpg.saloonprojeto.adapter.AgendamentoAdapter
-import br.edu.fatecpg.saloonprojeto.adapter.AgendamentoViewType
-import br.edu.fatecpg.saloonprojeto.adapter.ListItem
-import br.edu.fatecpg.saloonprojeto.model.Agendamento
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
 
 class MeusAgendamentosFragment : Fragment() {
-
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: AgendamentoAdapter
-    private val listItems = mutableListOf<ListItem>()
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
-    private lateinit var userNameTextView: TextView
+    private lateinit var rvPendentes: RecyclerView
+    private lateinit var rvConcluidos: RecyclerView
+    private val pendentesAdapter = SimpleAgendamentoAdapter()
+    private val concluidosAdapter = SimpleAgendamentoAdapter()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_meus_agendamentos, container, false)
-        recyclerView = view.findViewById(R.id.bookings_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        userNameTextView = view.findViewById(R.id.user_name)
-        
-        adapter = AgendamentoAdapter(listItems, AgendamentoViewType.CLIENTE) { agendamento ->
-            cancelarAgendamento(agendamento)
-        }
-        recyclerView.adapter = adapter
-        
-        return view
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.fragment_meus_agendamentos, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        carregarAgendamentos()
-        carregarDadosUsuario()
+
+        rvPendentes = view.findViewById(R.id.rv_pendentes)
+        rvConcluidos = view.findViewById(R.id.rv_concluidos)
+
+        rvPendentes.layoutManager = LinearLayoutManager(requireContext())
+        rvConcluidos.layoutManager = LinearLayoutManager(requireContext())
+
+        rvPendentes.adapter = pendentesAdapter
+        rvConcluidos.adapter = concluidosAdapter
+
+        loadLastThreeMonths()
     }
 
-    private fun carregarDadosUsuario() {
-        val userId = auth.currentUser?.uid
-        if (userId != null) {
-            db.collection("usuarios").document(userId).get()
-                .addOnSuccessListener { doc ->
-                    val nome = doc.getString("nome") ?: "Usuário"
-                    userNameTextView.text = nome
-                }
-        }
-    }
-
-    private fun carregarAgendamentos() {
+    private fun loadLastThreeMonths() {
         val userId = auth.currentUser?.uid ?: return
+        val cal = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -90) }
+        val threshold = Timestamp(cal.time)
 
         db.collection("agendamentos")
-            .whereEqualTo("userId", userId)
-            .addSnapshotListener { snapshots, e ->
-                if (e != null) {
-                    return@addSnapshotListener
+            .whereEqualTo("clienteId", userId)
+            .whereGreaterThanOrEqualTo("dataInicio", threshold)
+            .orderBy("dataInicio")
+            .get()
+            .addOnSuccessListener { snap ->
+                val pend = mutableListOf<Map<String, Any>>()
+                val conc = mutableListOf<Map<String, Any>>()
+                for (d in snap.documents) {
+                    val m = d.data ?: continue
+                    val status = (m["status"] as? String) ?: "agendado"
+                    val withId = HashMap(m)
+                    withId["id"] = d.id
+                    if (status == "concluido") conc.add(withId) else pend.add(withId)
                 }
-
-                listItems.clear()
-                val agendamentos = snapshots?.map { it.toObject(Agendamento::class.java).copy(id = it.id) } ?: emptyList()
-
-                val proximos = agendamentos.filter { it.status == "Confirmado" }
-                val historico = agendamentos.filter { it.status == "Cancelado" || it.status == "Realizado" }
-
-                if (proximos.isNotEmpty()) {
-                    listItems.add(ListItem.HeaderItem("Próximos Agendamentos"))
-                    proximos.forEach { listItems.add(ListItem.AgendamentoItem(it)) }
-                }
-
-                if (historico.isNotEmpty()) {
-                    listItems.add(ListItem.HeaderItem("Histórico"))
-                    historico.forEach { listItems.add(ListItem.AgendamentoItem(it)) }
-                }
-
-                adapter.notifyDataSetChanged()
+                pendentesAdapter.submitList(pend)
+                concluidosAdapter.submitList(conc)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(requireContext(), "Erro ao carregar agendamentos: ${e.message}", Toast.LENGTH_LONG).show()
             }
     }
 
-    private fun cancelarAgendamento(agendamento: Agendamento) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Cancelar Agendamento")
-            .setMessage("Você tem certeza que deseja cancelar este agendamento?")
-            .setPositiveButton("Sim") { _, _ ->
-                db.collection("agendamentos").document(agendamento.id)
-                    .update("status", "Cancelado")
-                    .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Agendamento cancelado com sucesso", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(requireContext(), "Erro ao cancelar o agendamento: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-            }
-            .setNegativeButton("Não", null)
-            .show()
+    // Simple adapter (replace with your own)
+    class SimpleAgendamentoAdapter : RecyclerView.Adapter<SimpleAgendamentoAdapter.VH>() {
+        private var list: List<Map<String, Any>> = emptyList()
+        fun submitList(l: List<Map<String, Any>>) { list = l; notifyDataSetChanged() }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+            val v = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_2, parent, false)
+            return VH(v)
+        }
+
+        override fun getItemCount(): Int = list.size
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            val item = list[position]
+            val serv = item["servicoId"]?.toString() ?: "Serviço"
+            val start = (item["dataInicio"] as? com.google.firebase.Timestamp)?.toDate()
+            holder.title.text = serv
+            holder.subtitle.text = start?.toString() ?: ""
+        }
+        class VH(view: View) : RecyclerView.ViewHolder(view) {
+            val title: android.widget.TextView = view.findViewById(android.R.id.text1)
+            val subtitle: android.widget.TextView = view.findViewById(android.R.id.text2)
+        }
     }
 }

@@ -35,10 +35,11 @@ class DashboardClienteFragment : Fragment() {
         recyclerView = view.findViewById(R.id.salons_recycler_view)
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
+        // 🔥 Navegação corrigida aqui
         adapter = SalaoAdapter(emptyList()) { salaoId ->
             val bundle = Bundle()
             bundle.putString("salaoId", salaoId)
-            findNavController().navigate(R.id.action_dashboardCliente_to_salaoServicos, bundle)
+            findNavController().navigate(R.id.action_home_to_salaoServicos, bundle)
         }
 
         recyclerView.adapter = adapter

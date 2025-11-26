@@ -80,7 +80,11 @@ class EditarPerfilFragment : Fragment() {
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Toast.makeText(requireContext(), "Erro ao carregar perfil: ${exception.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Erro ao carregar perfil: ${exception.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         }
     }
@@ -96,27 +100,53 @@ class EditarPerfilFragment : Fragment() {
             return
         }
 
-        val userUpdates = hashMapOf<String, Any>(
-            "email" to email,
-            "telefone" to telefone,
-            "endereco" to endereco
-        )
+        val user = auth.currentUser
 
-        if (userType == "salao") {
-            userUpdates["nomeSalao"] = nome
-        } else {
-            userUpdates["nome"] = nome
-        }
+        // 1️⃣ Atualizar e-mail no FirebaseAuth
+        user?.updateEmail(email)
+            ?.addOnSuccessListener {
 
-        userId?.let {
-            db.collection("usuarios").document(it).update(userUpdates)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "Perfil atualizado com sucesso!", Toast.LENGTH_SHORT).show()
-                    findNavController().navigateUp()
+                // 2️⃣ Depois atualizar no Firestore
+                val userUpdates = hashMapOf<String, Any>(
+                    "email" to email,
+                    "telefone" to telefone,
+                    "endereco" to endereco
+                )
+
+                if (userType == "salao") {
+                    userUpdates["nomeSalao"] = nome
+                } else {
+                    userUpdates["nome"] = nome
                 }
-                .addOnFailureListener { exception ->
-                    Toast.makeText(requireContext(), "Erro ao atualizar perfil: ${exception.message}", Toast.LENGTH_SHORT).show()
+
+                userId?.let {
+                    db.collection("usuarios").document(it)
+                        .set(userUpdates, com.google.firebase.firestore.SetOptions.merge())
+                        .addOnSuccessListener {
+                            Toast.makeText(
+                                requireContext(),
+                                "Perfil atualizado com sucesso!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            findNavController().navigateUp()
+                        }
+                        .addOnFailureListener { exception ->
+                            Toast.makeText(
+                                requireContext(),
+                                "Erro ao atualizar Firestore: ${exception.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                 }
-        }
+
+            }
+            ?.addOnFailureListener { exception ->
+                Toast.makeText(
+                    requireContext(),
+                    "Erro ao atualizar e-mail: ${exception.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
     }
+
 }

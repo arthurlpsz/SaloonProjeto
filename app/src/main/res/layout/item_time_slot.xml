@@ -16,7 +16,7 @@
     app:strokeWidth="1dp">
 
     <TextView
-        android:id="@+id/txt_horario"
+        android:id="@+id/tv_slot_time"
         android:layout_width="85dp"
         android:layout_height="48dp"
         android:gravity="center"

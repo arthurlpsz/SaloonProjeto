@@ -44,11 +44,13 @@ class PerfilFragment : Fragment() {
         telefonePerfil = view.findViewById(R.id.txv_telefone)
         btnLogout = view.findViewById(R.id.btn_logout)
 
+        // Botão editar perfil
         val editProfileButton = view.findViewById<Button>(R.id.btn_editar_perfil)
         editProfileButton.setOnClickListener {
             findNavController().navigate(R.id.action_perfilFragment_to_editarPerfilFragment)
         }
 
+        // Botão logout
         btnLogout.setOnClickListener {
             auth.signOut()
             activity?.let {
@@ -58,13 +60,20 @@ class PerfilFragment : Fragment() {
             }
         }
 
+        // Primeira carga ao abrir o fragment
+        loadUserProfile()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //  Recarrega os dados quando volta da tela de edição
         loadUserProfile()
     }
 
     private fun formatPhoneNumber(phone: String): String {
         val digits = phone.replace(Regex("[^0-9]"), "")
         if (digits.length < 10) {
-            return phone // return original if not enough digits to format
+            return phone
         }
 
         val ddd = digits.substring(0, 2)
@@ -73,7 +82,6 @@ class PerfilFragment : Fragment() {
         val formattedNumber = if (numberPart.length == 9) {
             "${numberPart.substring(0, 5)}-${numberPart.substring(5)}"
         } else {
-            // Assuming 8 digits for the number part if not 9
             "${numberPart.substring(0, 4)}-${numberPart.substring(4)}"
         }
 
@@ -82,26 +90,33 @@ class PerfilFragment : Fragment() {
 
     private fun loadUserProfile() {
         val userId = auth.currentUser?.uid
+
         if (userId != null) {
             db.collection("usuarios").document(userId).get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
                         val userType = document.getString("tipo")
+
                         if (userType == "salao") {
                             nomePerfil.text = document.getString("nomeSalao")
                         } else {
                             nomePerfil.text = document.getString("nome")
                         }
+
                         emailPerfil.text = document.getString("email")
+
                         val telefone = document.getString("telefone")
                         if (telefone != null) {
                             telefonePerfil.text = formatPhoneNumber(telefone)
                         }
-
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Toast.makeText(requireContext(), "Erro ao carregar perfil: ${exception.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Erro ao carregar perfil: ${exception.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
         }
     }

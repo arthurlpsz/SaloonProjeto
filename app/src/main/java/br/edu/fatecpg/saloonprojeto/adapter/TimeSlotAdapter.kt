@@ -1,5 +1,6 @@
 package br.edu.fatecpg.saloonprojeto.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 
 class TimeSlotAdapter(
-    private var timeSlots: List<String> = emptyList(),   // lista padrão vazia -> permite new TimeSlotAdapter { ... }
+    private var timeSlots: List<String> = emptyList(),
     private val onClick: (String) -> Unit
 ) : RecyclerView.Adapter<TimeSlotAdapter.TimeSlotViewHolder>() {
 
     private var selectedPosition = -1
 
     inner class TimeSlotViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val txtHorario: TextView = itemView.findViewById(R.id.txt_horario)
+        val txtHorario: TextView = itemView.findViewById(R.id.tv_slot_time)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeSlotViewHolder {
@@ -24,11 +25,10 @@ class TimeSlotAdapter(
         return TimeSlotViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: TimeSlotViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TimeSlotViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val horario = timeSlots[position]
         holder.txtHorario.text = horario
 
-        // Destaque do horário selecionado — usa drawables que você deve ter em res/drawable
         val bgRes = if (position == selectedPosition) {
             R.drawable.selected_time_slot
         } else {
@@ -38,14 +38,13 @@ class TimeSlotAdapter(
 
         holder.itemView.setOnClickListener {
             selectedPosition = position
-            notifyDataSetChanged() // atualiza o destaque
+            notifyDataSetChanged()
             onClick(horario)
         }
     }
 
     override fun getItemCount(): Int = timeSlots.size
 
-    // método público para atualizar a lista dinamicamente
     fun updateList(newList: List<String>) {
         timeSlots = newList
         selectedPosition = -1
