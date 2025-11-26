@@ -42,4 +42,12 @@
     <string name="salvar_alteracoes">Salvar Alterações</string>
     <string name="endereco">Endereço</string>
     <string name="sair">Sair</string>
+    <string name="dia_label">Dia</string>
+    <string name="abre_hint">Abre (08:00)</string>
+    <string name="fecha_hint">Fecha (18:00)</string>
+    <string name="fechado_label">Fechado</string>
+    <string name="selecionar_data">Selecione uma data</string>
+    <string name="escolher_data">Escolher data</string>
+    <string name="carregar_horarios">Carregar horários</string>
+    <string name="definir_horarios_salao">Definir horários do salão</string>
 </resources>

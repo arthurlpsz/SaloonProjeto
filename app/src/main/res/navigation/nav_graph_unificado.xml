@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_unificado"
+    app:startDestination="@id/dashboardClienteFragment">
+
+    <!-- ===================== DASHBOARD CLIENTE ===================== -->
+
+    <fragment
+        android:id="@+id/dashboardClienteFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.DashboardClienteFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_dashboard_cliente">
+
+        <action
+            android:id="@+id/action_home_to_salaoServicos"
+            app:destination="@id/salaoServicosFragment" />
+
+        <action
+            android:id="@+id/action_home_to_perfil"
+            app:destination="@id/perfilFragment" />
+    </fragment>
+
+
+    <!-- ===================== SERVIÇOS DO SALÃO ===================== -->
+
+    <fragment
+        android:id="@+id/salaoServicosFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoServicosFragment"
+        android:label="Serviços"
+        tools:layout="@layout/fragment_salao_servicos">
+
+        <argument
+            android:name="salaoId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_salaoServicos_to_agendar"
+            app:destination="@id/navigation_agendar" />
+
+        <action
+            android:id="@+id/action_salaoServicos_to_dashboard_salao"
+            app:destination="@id/salaoDashboard" />
+
+        <action
+            android:id="@+id/action_salaoServicos_to_perfil"
+            app:destination="@id/perfilFragment" />
+
+        <action
+            android:id="@+id/action_salaoServicos_to_agendamentos"
+            app:destination="@id/salaoAgendamentosFragment" />
+    </fragment>
+
+
+    <!-- ===================== AGENDAR SERVIÇO ===================== -->
+
+    <fragment
+        android:id="@+id/navigation_agendar"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.AgendarFragment"
+        android:label="Agendar"
+        tools:layout="@layout/fragment_agendar">
+
+        <argument
+            android:name="salaoId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_agendar_to_salaoServicos"
+            app:destination="@id/salaoServicosFragment" />
+    </fragment>
+
+
+    <!-- ===================== PERFIL (CLIENTE ou SALÃO) ===================== -->
+
+    <fragment
+        android:id="@+id/perfilFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.PerfilFragment"
+        android:label="Perfil"
+        tools:layout="@layout/fragment_perfil">
+
+        <action
+            android:id="@+id/action_perfil_to_dashboard_cliente"
+            app:destination="@id/dashboardClienteFragment" />
+
+        <action
+            android:id="@+id/action_perfil_to_dashboard_salao"
+            app:destination="@id/salaoDashboard" />
+
+        <action
+            android:id="@+id/action_perfil_to_salaoServicos"
+            app:destination="@id/salaoServicosFragment" />
+
+        <action
+            android:id="@+id/action_perfil_to_agendamentos"
+            app:destination="@id/salaoAgendamentosFragment" />
+
+        <!-- 🔥 ACTION FALTANTE (AGORA CORRIGIDA) -->
+        <action
+            android:id="@+id/action_perfilFragment_to_editarPerfilFragment"
+            app:destination="@id/editarPerfilFragment" />
+    </fragment>
+
+
+    <!-- ===================== EDITAR PERFIL (NOVO, CORRIGIDO) ===================== -->
+
+    <fragment
+        android:id="@+id/editarPerfilFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.EditarPerfilFragment"
+        android:label="Editar Perfil"
+        tools:layout="@layout/fragment_editar_perfil" />
+
+
+    <!-- ===================== DASHBOARD SALÃO ===================== -->
+
+    <fragment
+        android:id="@+id/salaoDashboard"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoDashboardFragment"
+        android:label="Dashboard Salão"
+        tools:layout="@layout/fragment_dashboard_salao">
+
+        <action
+            android:id="@+id/action_salaoDashboard_to_definirHorario"
+            app:destination="@id/definirHorariosFragment" />
+
+        <action
+            android:id="@+id/action_salaoDashboard_to_adicionarServico"
+            app:destination="@id/salaoAdicionarServicoFragment" />
+
+        <action
+            android:id="@+id/action_salaoDashboard_to_editarServico"
+            app:destination="@id/salaoEditarServicoFragment" />
+
+        <action
+            android:id="@+id/action_salaoDashboard_to_perfil"
+            app:destination="@id/perfilFragment" />
+
+        <action
+            android:id="@+id/action_salaoDashboard_to_agendamentos"
+            app:destination="@id/salaoAgendamentosFragment" />
+
+        <action
+            android:id="@+id/action_salaoDashboard_to_salaoServicos"
+            app:destination="@id/salaoServicosFragment" />
+    </fragment>
+
+
+    <!-- ===================== ADICIONAR SERVIÇO ===================== -->
+
+    <fragment
+        android:id="@+id/salaoAdicionarServicoFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoAdicionarServicoFragment"
+        android:label="Adicionar Serviço"
+        tools:layout="@layout/fragment_salao_adicionar_servico">
+
+        <action
+            android:id="@+id/action_salaoAdicionarServico_to_dashboard"
+            app:destination="@id/salaoDashboard" />
+    </fragment>
+
+
+    <!-- ===================== EDITAR SERVIÇO ===================== -->
+
+    <fragment
+        android:id="@+id/salaoEditarServicoFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoEditarServicoFragment"
+        android:label="Editar Serviço"
+        tools:layout="@layout/fragment_salao_editar_servico">
+
+        <argument
+            android:name="servicoId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_salaoEditarServico_to_dashboard"
+            app:destination="@id/salaoDashboard" />
+    </fragment>
+
+
+    <!-- ===================== DEFINIR HORÁRIOS ===================== -->
+
+    <fragment
+        android:id="@+id/definirHorariosFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.DefinirHorariosFragment"
+        android:label="Horários"
+        tools:layout="@layout/fragment_definir_horarios">
+
+        <action
+            android:id="@+id/action_definirHorario_to_dashboard"
+            app:destination="@id/salaoDashboard" />
+    </fragment>
+
+
+    <!-- ===================== AGENDAMENTOS DO SALÃO ===================== -->
+
+    <fragment
+        android:id="@+id/salaoAgendamentosFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.SalaoAgendamentosFragment"
+        android:label="Agendamentos"
+        tools:layout="@layout/fragment_salao_agendamentos">
+
+        <action
+            android:id="@+id/action_agendamentos_to_dashboard"
+            app:destination="@id/salaoDashboard" />
+
+        <action
+            android:id="@+id/action_agendamentos_to_perfil"
+            app:destination="@id/perfilFragment" />
+
+        <action
+            android:id="@+id/action_agendamentos_to_salaoServicos"
+            app:destination="@id/salaoServicosFragment" />
+    </fragment>
+
+</navigation>

@@ -13,4 +13,5 @@
     <item name="button" type="id" />
     <item name="action_dashboardCliente_to_salaoServicos" type="id" />
     <item name="btn_ver_servicos" type="id" />
+    <item name="rv_slots" type="id" />
 </resources>

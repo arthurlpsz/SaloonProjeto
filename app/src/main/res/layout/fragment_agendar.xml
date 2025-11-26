@@ -10,7 +10,7 @@
         android:id="@+id/txv_selected_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Selecione uma data"
+        android:text="@string/selecionar_data"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +20,7 @@
         android:id="@+id/btn_pick_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Escolher data"
+        android:text="@string/escolher_data"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="@+id/txv_selected_date"
         app:layout_constraintTop_toBottomOf="@+id/txv_selected_date"/>
@@ -29,17 +29,28 @@
         android:id="@+id/btn_load_slots"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Carregar horários"
+        android:text="@string/carregar_horarios"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toEndOf="@+id/btn_pick_date"
         app:layout_constraintTop_toTopOf="@+id/btn_pick_date"/>
+
+    <Button
+        android:id="@+id/btn_definir_horarios"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/definir_horarios_salao"
+        android:visibility="gone"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_pick_date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_slots"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/btn_pick_date"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_definir_horarios"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

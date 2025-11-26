@@ -1,24 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="12dp"
-    android:gravity="center_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/txtDiaSemana"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="16sp"
-        android:text="Segunda"
-        />
-
-    <CheckBox
-        android:id="@+id/checkAberto"
+        android:id="@+id/tv_dia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aberto"
-        />
+        android:text="@string/dia_label"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/edt_abre"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="@string/abre_hint"
+            android:inputType="time"
+            android:importantForAutofill="no"
+            android:maxLines="1" />
+
+        <EditText
+            android:id="@+id/edt_fecha"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:hint="@string/fecha_hint"
+            android:inputType="time"
+            android:importantForAutofill="no"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/check_fechado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fechado_label"
+        android:layout_marginTop="8dp" />
+
 </LinearLayout>

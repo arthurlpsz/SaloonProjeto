@@ -99,13 +99,8 @@ class CadastroActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Toast.makeText(this, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show()
 
-                            // Redirecionar após sucesso
-                            val intent = if (isClientSelected) {
-                                Intent(this, LoginActivity::class.java)
-                            } else {
-                                Intent(this, SalaoActivity::class.java)
-                            }
-                            startActivity(intent)
+                            // Redirecionar após sucesso → volta para a tela de login
+                            startActivity(Intent(this, LoginActivity::class.java))
                             finish()
                         }
                         .addOnFailureListener { e ->
