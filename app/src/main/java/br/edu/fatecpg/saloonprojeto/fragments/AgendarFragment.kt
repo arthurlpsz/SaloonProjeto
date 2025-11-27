@@ -1,12 +1,10 @@
 package br.edu.fatecpg.saloonprojeto.fragments
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.CalendarView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,14 +14,11 @@ import br.edu.fatecpg.saloonprojeto.adapter.TimeSlotAdapter
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import java.text.SimpleDateFormat
 import java.util.*
 
 class AgendarFragment : Fragment() {
 
-    private lateinit var tvSelectedDate: TextView
-    private lateinit var btnPickDate: Button
-    private lateinit var btnLoadSlots: Button
+    private lateinit var calendarView: CalendarView
     private lateinit var rvSlots: RecyclerView
 
     private val db = FirebaseFirestore.getInstance()
@@ -54,12 +49,8 @@ class AgendarFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        tvSelectedDate = view.findViewById(R.id.txv_selected_date)
-        btnPickDate = view.findViewById(R.id.btn_pick_date)
-        btnLoadSlots = view.findViewById(R.id.btn_load_slots)
+        calendarView = view.findViewById(R.id.calendar_view)
         rvSlots = view.findViewById(R.id.rv_slots)
-
-        updateDateText()
 
         rvSlots.layoutManager = LinearLayoutManager(requireContext())
         slotAdapter = TimeSlotAdapter(listaSlots) { horaSelecionada ->
@@ -67,27 +58,13 @@ class AgendarFragment : Fragment() {
         }
         rvSlots.adapter = slotAdapter
 
-        btnPickDate.setOnClickListener { mostrarDatePicker() }
-        btnLoadSlots.setOnClickListener { carregarSlots() }
-    }
+        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            selectedDate.set(year, month, dayOfMonth)
+            carregarSlots()
+        }
 
-    private fun updateDateText() {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        tvSelectedDate.text = sdf.format(selectedDate.time)
-    }
-
-    private fun mostrarDatePicker() {
-        val c = selectedDate
-        DatePickerDialog(
-            requireContext(),
-            { _, year, month, day ->
-                selectedDate.set(year, month, day)
-                updateDateText()
-            },
-            c.get(Calendar.YEAR),
-            c.get(Calendar.MONTH),
-            c.get(Calendar.DAY_OF_MONTH)
-        ).show()
+        // Carregar slots para a data atual inicialmente
+        carregarSlots()
     }
 
     private fun carregarSlots() {
@@ -118,6 +95,8 @@ class AgendarFragment : Fragment() {
                 val keyDia = dayKeyFromCalendar(selectedDate)
                 val diaMap = working[keyDia] as? Map<*, *>
                 if (diaMap == null) {
+                    listaSlots.clear()
+                    slotAdapter.updateList(listaSlots.toList())
                     Toast.makeText(requireContext(), "Salão fechado neste dia.", Toast.LENGTH_LONG).show()
                     return@addOnSuccessListener
                 }
@@ -179,7 +158,7 @@ class AgendarFragment : Fragment() {
         slotAdapter.updateList(listaSlots.toList())
 
         if (listaSlots.isEmpty()) {
-            Toast.makeText(requireContext(), "Sem horários livres.", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Sem horários livres para este dia.", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -191,13 +170,13 @@ class AgendarFragment : Fragment() {
 
     private fun dayKeyFromCalendar(c: Calendar): String {
         return when (c[Calendar.DAY_OF_WEEK]) {
-            Calendar.MONDAY -> "monday"
-            Calendar.TUESDAY -> "tuesday"
-            Calendar.WEDNESDAY -> "wednesday"
-            Calendar.THURSDAY -> "thursday"
-            Calendar.FRIDAY -> "friday"
-            Calendar.SATURDAY -> "saturday"
-            else -> "sunday"
+            Calendar.MONDAY -> "segunda"
+            Calendar.TUESDAY -> "terca"
+            Calendar.WEDNESDAY -> "quarta"
+            Calendar.THURSDAY -> "quinta"
+            Calendar.FRIDAY -> "sexta"
+            Calendar.SATURDAY -> "sabado"
+            else -> "domingo"
         }
     }
 
@@ -231,6 +210,8 @@ class AgendarFragment : Fragment() {
             .add(dados)
             .addOnSuccessListener {
                 Toast.makeText(requireContext(), "Agendado com sucesso!", Toast.LENGTH_LONG).show()
+                // Recarregar os slots para remover o horário agendado
+                carregarSlots()
             }
     }
 }

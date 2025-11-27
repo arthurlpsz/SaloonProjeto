@@ -1,51 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="12dp"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
+    <!-- Title and Checkbox row -->
     <TextView
         android:id="@+id/tv_dia"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/dia_label"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:textSize="18sp" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <EditText
-            android:id="@+id/edt_abre"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:hint="@string/abre_hint"
-            android:inputType="time"
-            android:importantForAutofill="no"
-            android:maxLines="1" />
-
-        <EditText
-            android:id="@+id/edt_fecha"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:hint="@string/fecha_hint"
-            android:inputType="time"
-            android:importantForAutofill="no"
-            android:maxLines="1" />
-    </LinearLayout>
+        app:layout_constraintEnd_toStartOf="@+id/check_fechado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Segunda" />
 
     <CheckBox
         android:id="@+id/check_fechado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/fechado_label"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/tv_dia"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_dia" />
 
-</LinearLayout>
+    <!-- Guideline for center split -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <!-- Abre Section -->
+    <TextView
+        android:id="@+id/label_abre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Abre:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_dia" />
+
+    <TextView
+        android:id="@+id/tv_abre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_gold_border"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/abre_hint"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_abre" />
+
+    <!-- Fecha Section -->
+    <TextView
+        android:id="@+id/label_fecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Fecha:"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/tv_dia" />
+
+    <TextView
+        android:id="@+id/tv_fecha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/rounded_gold_border"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/fecha_hint"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/label_fecha" />
+
+    <!-- Divider -->
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_abre" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

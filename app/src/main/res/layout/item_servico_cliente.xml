@@ -12,24 +12,23 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/txt_nome_servico"
+            android:id="@+id/service_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Nome do Serviço"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_agendar_servico"/>
+            app:layout_constraintEnd_toStartOf="@+id/btn_agendar" />
 
         <TextView
-            android:id="@+id/txt_preco_servico"
+            android:id="@+id/service_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="R$ 50,00"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_nome_servico" />
+            app:layout_constraintTop_toBottomOf="@+id/service_name" />
 
         <TextView
             android:id="@+id/duracao_servico"
@@ -38,18 +37,16 @@
             android:text="Duração: 60 min"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt_preco_servico" />
+            app:layout_constraintTop_toBottomOf="@+id/service_price" />
 
         <Button
-            android:id="@+id/btn_agendar_servico"
+            android:id="@+id/btn_agendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Agendar"
-            android:backgroundTint="@color/gold"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

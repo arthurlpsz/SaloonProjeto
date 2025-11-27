@@ -4,23 +4,29 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.adapter.ServicoAdapter
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import android.widget.Toast
 
 class SalaoServicosFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var servicoAdapter: ServicoAdapter
     private val listaServicos = mutableListOf<HashMap<String, Any>>()
+    private var salaoId: String? = null
 
     private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            salaoId = it.getString("salaoId")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,7 +37,8 @@ class SalaoServicosFragment : Fragment() {
         recyclerView = view.findViewById(R.id.services_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        servicoAdapter = ServicoAdapter(listaServicos, db)
+        // false para a visão do cliente
+        servicoAdapter = ServicoAdapter(listaServicos, db, false)
         recyclerView.adapter = servicoAdapter
 
         carregarServicos()
@@ -40,7 +47,10 @@ class SalaoServicosFragment : Fragment() {
     }
 
     private fun carregarServicos() {
-        val salaoId = auth.currentUser?.uid ?: return
+        if (salaoId == null) {
+            Toast.makeText(context, "ID do salão não fornecido", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         db.collection("servicos")
             .whereEqualTo("salaoId", salaoId)

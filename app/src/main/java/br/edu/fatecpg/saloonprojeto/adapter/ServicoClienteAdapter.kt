@@ -14,9 +14,9 @@ class ServicoClienteAdapter(
 ) : RecyclerView.Adapter<ServicoClienteAdapter.ServicoViewHolder>() {
 
     inner class ServicoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val nome: TextView = view.findViewById(R.id.txt_nome_servico)
-        val preco: TextView = view.findViewById(R.id.txt_preco_servico)
-        val botaoAgendar: Button = view.findViewById(R.id.btn_agendar_servico)
+        val nome: TextView = view.findViewById(R.id.service_name)
+        val preco: TextView = view.findViewById(R.id.service_price)
+        val botaoAgendar: Button = view.findViewById(R.id.btn_agendar)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServicoViewHolder {
@@ -29,11 +29,15 @@ class ServicoClienteAdapter(
         val servico = lista[position]
 
         val nome = servico["nome"] as? String ?: "Serviço"
-        val preco = servico["preco"] as? String ?: "0,00"
+        val preco = servico["preco"]
+        val precoFormatado = when (preco) {
+            is Number -> "R$ %.2f".format(preco.toDouble())
+            else -> "R$ 0.00"
+        }
         val id = servico["id"] as? String ?: ""
 
         holder.nome.text = nome
-        holder.preco.text = "R$ $preco"
+        holder.preco.text = precoFormatado
 
         holder.botaoAgendar.setOnClickListener {
             onAgendarClick(id)

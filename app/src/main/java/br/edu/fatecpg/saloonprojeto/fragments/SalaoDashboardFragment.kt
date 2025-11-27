@@ -47,7 +47,7 @@ class SalaoDashboardFragment : Fragment() {
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.services_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        servicoAdapter = ServicoAdapter(servicosList, db)
+        servicoAdapter = ServicoAdapter(servicosList, db, true) // true para a visão do salão
         recyclerView.adapter = servicoAdapter
 
         val fabAdicionarServico = view.findViewById<FloatingActionButton>(R.id.fab_add_service)
