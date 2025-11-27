@@ -2,9 +2,20 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/img_voltar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_voltar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txv_title"
+        app:layout_constraintBottom_toBottomOf="@+id/txv_title"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/txv_title"
@@ -13,28 +24,53 @@
         android:text="@string/selecionar_data"
         android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/img_voltar"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_date_buttons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/txv_title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btn_hoje"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/hoje"/>
+
+        <Button
+            android:id="@+id/btn_amanha"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="@string/amanha"/>
+
+        <Button
+            android:id="@+id/btn_outro_dia"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="@string/outro_dia"/>
+    </LinearLayout>
 
     <CalendarView
         android:id="@+id/calendar_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txv_title" />
-
-    <Button
-        android:id="@+id/btn_definir_horarios"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/definir_horarios_salao"
-        android:visibility="gone"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@+id/calendar_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/ll_date_buttons" />
 
     <TextView
         android:id="@+id/txv_horarios_disponiveis"
@@ -45,7 +81,7 @@
         android:textStyle="bold"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_definir_horarios" />
+        app:layout_constraintTop_toBottomOf="@+id/calendar_view" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_slots"

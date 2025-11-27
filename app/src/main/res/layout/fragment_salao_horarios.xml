@@ -7,7 +7,7 @@
 
     <ImageView
         android:id="@+id/iv_back"
-        android:src="@drawable/ic_arrow_back"
+        android:src="@drawable/ic_voltar"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:padding="4dp" />
