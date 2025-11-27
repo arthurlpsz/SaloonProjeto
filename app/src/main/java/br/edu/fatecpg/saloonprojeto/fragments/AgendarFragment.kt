@@ -8,11 +8,12 @@ import android.widget.Button
 import android.widget.CalendarView
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.adapter.TimeSlotAdapter
@@ -74,7 +75,7 @@ class AgendarFragment : Fragment() {
         btnOutroDia = view.findViewById(R.id.btn_outro_dia)
         btnConfirmarAgendamento = view.findViewById(R.id.btn_confirmar_agendamento)
 
-        rvSlots.layoutManager = LinearLayoutManager(requireContext())
+        rvSlots.layoutManager = GridLayoutManager(requireContext(), 3)
         slotAdapter = TimeSlotAdapter(listaSlots) { horaSelecionada ->
             selectedSlot = horaSelecionada
             btnConfirmarAgendamento.visibility = View.VISIBLE
@@ -129,7 +130,13 @@ class AgendarFragment : Fragment() {
     private fun updateButtonStyles(selectedButton: View) {
         val buttons = listOf(btnHoje, btnAmanha, btnOutroDia)
         buttons.forEach { button ->
-            button.setBackgroundResource(if (button == selectedButton) R.drawable.button_selected_background else R.drawable.button_unselected_background)
+            if (button == selectedButton) {
+                button.setBackgroundResource(R.drawable.button_selected_background)
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            } else {
+                button.setBackgroundResource(R.drawable.button_unselected_background)
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.gold))
+            }
         }
     }
 

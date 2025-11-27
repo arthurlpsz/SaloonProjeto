@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
@@ -16,6 +18,7 @@ class SalaoServicosFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var servicoAdapter: ServicoAdapter
+    private lateinit var ivBack: ImageView
     private val listaServicos = mutableListOf<HashMap<String, Any>>()
     private var salaoId: String? = null
 
@@ -35,11 +38,16 @@ class SalaoServicosFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_salao_servicos, container, false)
 
         recyclerView = view.findViewById(R.id.services_recycler_view)
+        ivBack = view.findViewById(R.id.iv_back)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         // false para a visão do cliente
         servicoAdapter = ServicoAdapter(listaServicos, db, false)
         recyclerView.adapter = servicoAdapter
+
+        ivBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         carregarServicos()
 

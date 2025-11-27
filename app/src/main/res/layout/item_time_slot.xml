@@ -8,10 +8,11 @@
     android:layout_margin="4dp"
     android:clickable="true"
     android:focusable="true"
+    android:checkable="true"
     app:cardBackgroundColor="@color/time_slot_background_selector"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
-    app:layout_constraintHeight="48dp"
+    app:rippleColor="@android:color/transparent"
     app:strokeColor="@color/gold"
     app:strokeWidth="1dp">
 
