@@ -2,14 +2,18 @@
 package br.edu.fatecpg.saloonprojeto.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
+import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,6 +29,10 @@ class MeusAgendamentosFragment : Fragment() {
     private val pendentesAdapter = SimpleAgendamentoAdapter()
     private val concluidosAdapter = SimpleAgendamentoAdapter()
 
+    // Views do Header
+    private lateinit var profileImage: ImageView
+    private lateinit var userName: TextView
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_meus_agendamentos, container, false)
     }
@@ -34,6 +42,10 @@ class MeusAgendamentosFragment : Fragment() {
 
         rvPendentes = view.findViewById(R.id.rv_pendentes)
         rvConcluidos = view.findViewById(R.id.rv_concluidos)
+        
+        val headerView = view.findViewById<View>(R.id.header_view)
+        profileImage = headerView.findViewById(R.id.profile_image)
+        userName = headerView.findViewById(R.id.user_name)
 
         rvPendentes.layoutManager = LinearLayoutManager(requireContext())
         rvConcluidos.layoutManager = LinearLayoutManager(requireContext())
@@ -41,7 +53,31 @@ class MeusAgendamentosFragment : Fragment() {
         rvPendentes.adapter = pendentesAdapter
         rvConcluidos.adapter = concluidosAdapter
 
+        loadHeaderInfo()
         loadLastThreeMonths()
+    }
+
+    private fun loadHeaderInfo() {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("usuarios").document(userId).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        userName.text = document.getString("nome")
+
+                        val imageUrl = document.getString("imageUrl")
+                        if (!imageUrl.isNullOrEmpty()) {
+                            Glide.with(this)
+                                .load(imageUrl)
+                                .centerCrop()
+                                .into(profileImage)
+                        }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("MeusAgendamentosFragment", "Erro ao carregar informações do cabeçalho", exception)
+                }
+        }
     }
 
     private fun loadLastThreeMonths() {

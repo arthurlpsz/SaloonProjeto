@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/dashboardClienteFragment"
         android:icon="@drawable/home"
         android:title="Início" />
     <item
-        android:id="@+id/navigation_agendamentos"
+        android:id="@+id/salaoAgendamentosFragment"
         android:icon="@drawable/calendar_clock"
         android:title="Agendamentos" />
     <item
-        android:id="@+id/navigation_perfil"
+        android:id="@+id/perfilFragment"
         android:icon="@drawable/user"
         android:title="Perfil" />
 </menu>

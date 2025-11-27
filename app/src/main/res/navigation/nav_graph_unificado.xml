@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_unificado"
-    app:startDestination="@id/dashboardClienteFragment">
+    app:startDestination="@id/salaoDashboard">
 
     <!-- ===================== DASHBOARD CLIENTE ===================== -->
 

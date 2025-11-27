@@ -49,8 +49,7 @@ class ServicoAdapter(
             val id = servico["id"] as? String ?: return@setOnClickListener
             db.collection("servicos").document(id).delete()
                 .addOnSuccessListener {
-                    listaServicos.removeAt(position)
-                    notifyItemRemoved(position)
+                    // A lista será atualizada automaticamente pelo listener em SalaoDashboardFragment
                     Toast.makeText(holder.itemView.context, "Serviço excluído", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener {
@@ -62,7 +61,7 @@ class ServicoAdapter(
             val id = servico["id"] as? String ?: return@setOnClickListener
             val bundle = Bundle()
             bundle.putString("servicoId", id)
-            holder.itemView.findNavController().navigate(R.id.action_salao_dashboard_to_salao_editar, bundle)
+            holder.itemView.findNavController().navigate(R.id.action_salaoDashboard_to_editarServico, bundle)
         }
     }
 

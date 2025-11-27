@@ -1,15 +1,35 @@
 package br.edu.fatecpg.saloonprojeto.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
+import br.edu.fatecpg.saloonprojeto.adapter.ServicoAdapter
+import com.bumptech.glide.Glide
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 
 class SalaoDashboardFragment : Fragment() {
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
+    private lateinit var servicoAdapter: ServicoAdapter
+    private val servicosList = mutableListOf<HashMap<String, Any>>()
+    private var servicosListener: ListenerRegistration? = null
+
+    // Views do Header
+    private lateinit var profileImage: ImageView
+    private lateinit var userName: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -17,33 +37,105 @@ class SalaoDashboardFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_dashboard_salao, container, false)
 
-        // Botões do Dashboard
-        val fabAdicionarServico = view.findViewById<FloatingActionButton>(R.id.fab_adicionar_servico)
-        val fabDefinirHorario = view.findViewById<FloatingActionButton>(R.id.fab_definir_horario)
-        val fabPerfil = view.findViewById<FloatingActionButton>(R.id.fab_perfil)
-        val fabAgendamentos = view.findViewById<FloatingActionButton>(R.id.fab_agendamentos)
-        val fabServicos = view.findViewById<FloatingActionButton>(R.id.fab_servicos)
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
+        // Inicializa as views do header
+        val headerView = view.findViewById<View>(R.id.header_view)
+        profileImage = headerView.findViewById(R.id.profile_image)
+        userName = headerView.findViewById(R.id.user_name)
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.services_recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        servicoAdapter = ServicoAdapter(servicosList, db)
+        recyclerView.adapter = servicoAdapter
+
+        val fabAdicionarServico = view.findViewById<FloatingActionButton>(R.id.fab_add_service)
         fabAdicionarServico.setOnClickListener {
             findNavController().navigate(R.id.action_salaoDashboard_to_adicionarServico)
         }
 
+        val fabDefinirHorario = view.findViewById<FloatingActionButton>(R.id.fab_definir_horarios)
         fabDefinirHorario.setOnClickListener {
             findNavController().navigate(R.id.action_salaoDashboard_to_definirHorario)
         }
 
-        fabPerfil.setOnClickListener {
-            findNavController().navigate(R.id.action_salaoDashboard_to_perfil)
-        }
-
-        fabAgendamentos.setOnClickListener {
-            findNavController().navigate(R.id.action_salaoDashboard_to_agendamentos)
-        }
-
-        fabServicos.setOnClickListener {
-            findNavController().navigate(R.id.action_salaoDashboard_to_salaoServicos)
-        }
-
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadHeaderInfo()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setupServicesListener()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        servicosListener?.remove()
+    }
+
+    private fun loadHeaderInfo() {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("usuarios").document(userId).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val userType = document.getString("tipo")
+                        val name = if (userType == "salao") {
+                            document.getString("nomeSalao")
+                        } else {
+                            document.getString("nome")
+                        }
+
+                        if (!name.isNullOrBlank()) {
+                            userName.text = name
+                        } else {
+                            userName.text = "Nome não encontrado"
+                        }
+
+                        val imageUrl = document.getString("imageUrl")
+                        if (!imageUrl.isNullOrEmpty()) {
+                            Glide.with(this)
+                                .load(imageUrl)
+                                .centerCrop()
+                                .into(profileImage)
+                        }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("SalaoDashboardFragment", "Erro ao carregar informações do cabeçalho", exception)
+                }
+        }
+    }
+
+    private fun setupServicesListener() {
+        val salaoId = auth.currentUser?.uid
+        if (salaoId == null) {
+            Log.e("SalaoDashboardFragment", "ID do salão não encontrado.")
+            return
+        }
+
+        servicosListener = db.collection("servicos")
+            .whereEqualTo("salaoId", salaoId)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.w("SalaoDashboardFragment", "Erro ao ouvir os serviços.", e)
+                    return@addSnapshotListener
+                }
+
+                val tempList = mutableListOf<HashMap<String, Any>>()
+                if (snapshots != null) {
+                    for (document in snapshots.documents) {
+                        val servico = document.data as HashMap<String, Any>
+                        servico["id"] = document.id
+                        tempList.add(servico)
+                    }
+                }
+                servicoAdapter.updateList(tempList)
+            }
     }
 }

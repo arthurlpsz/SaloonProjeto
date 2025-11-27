@@ -14,13 +14,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include
-        android:id="@+id/salao_header"
-        layout="@layout/header_salao_info"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header_view" />
-
     <TextView
         android:id="@+id/txv_saloes_disponiveis"
         android:layout_width="wrap_content"
@@ -32,7 +25,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/salao_header" />
+        app:layout_constraintTop_toBottomOf="@+id/header_view" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/services_recycler_view"

@@ -1,24 +1,24 @@
 package br.edu.fatecpg.saloonprojeto.adapter
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
+import com.bumptech.glide.Glide
 
-class SalaoAdapter(
-    private var saloes: List<HashMap<String, Any>>,
-    private val onClick: (String) -> Unit
-) : RecyclerView.Adapter<SalaoAdapter.SalaoViewHolder>() {
+class SalaoAdapter(private var saloes: List<HashMap<String, Any>>) : RecyclerView.Adapter<SalaoAdapter.SalaoViewHolder>() {
 
     inner class SalaoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val salonImage: ImageView = view.findViewById(R.id.img_salao)
-        val salonName: TextView = view.findViewById(R.id.txv_nome_salao)
-        val salonDistance: TextView = view.findViewById(R.id.txv_endereco_salao)
-        val btnVerServicos: AppCompatButton = view.findViewById(R.id.btn_ver_servicos)
+        val nomeSalao: TextView = view.findViewById(R.id.txv_nome_salao)
+        val enderecoSalao: TextView = view.findViewById(R.id.txv_endereco_salao)
+        val imagemSalao: ImageView = view.findViewById(R.id.img_salao)
+        val btnVerServicos: Button = view.findViewById(R.id.btn_ver_servicos)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SalaoViewHolder {
@@ -27,31 +27,36 @@ class SalaoAdapter(
         return SalaoViewHolder(view)
     }
 
-    override fun getItemCount(): Int = saloes.size
-
     override fun onBindViewHolder(holder: SalaoViewHolder, position: Int) {
         val salao = saloes[position]
+        val salaoId = salao["id"] as String
 
-        val nome = (salao["nomeSalao"] as? String)
-            ?: (salao["nome"] as? String)
-            ?: "Salão"
+        // Correção: busca por "nomeSalao" para exibir nos cards
+        holder.nomeSalao.text = salao["nomeSalao"] as? String ?: "Nome não encontrado"
+        holder.enderecoSalao.text = salao["endereco"] as? String ?: "Endereço não disponível"
 
-        val endereco = salao["endereco"] as? String ?: "Localização não informada"
-
-        holder.salonName.text = nome
-        holder.salonDistance.text = endereco
-
-        holder.salonImage.setImageResource(R.drawable.salao_feminino)
-
-        val salaoId = salao["id"] as? String ?: return
+        val imageUrl = salao["imageUrl"] as? String
+        if (!imageUrl.isNullOrEmpty()) {
+            Glide.with(holder.itemView.context)
+                .load(imageUrl)
+                .centerCrop()
+                .placeholder(R.drawable.salao_feminino) // Imagem padrão enquanto carrega
+                .into(holder.imagemSalao)
+        } else {
+            holder.imagemSalao.setImageResource(R.drawable.salao_feminino) // Imagem padrão
+        }
 
         holder.btnVerServicos.setOnClickListener {
-            onClick(salaoId)
+            val bundle = Bundle()
+            bundle.putString("salaoId", salaoId)
+            holder.itemView.findNavController().navigate(R.id.action_home_to_salaoServicos, bundle)
         }
     }
 
-    fun updateList(newList: List<HashMap<String, Any>>) {
-        saloes = newList
+    override fun getItemCount() = saloes.size
+
+    fun updateSaloes(newSaloes: List<HashMap<String, Any>>) {
+        saloes = newSaloes
         notifyDataSetChanged()
     }
 }
