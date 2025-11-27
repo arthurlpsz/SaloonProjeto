@@ -1,5 +1,6 @@
 package br.edu.fatecpg.saloonprojeto.adapter
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,13 +57,21 @@ class ServicoAdapter(
         if (isSalaoView) {
             holder.btnExcluir?.setOnClickListener {
                 val id = servico["id"] as? String ?: return@setOnClickListener
-                db.collection("servicos").document(id).delete()
-                    .addOnSuccessListener {
-                        Toast.makeText(holder.itemView.context, "Serviço excluído", Toast.LENGTH_SHORT).show()
+
+                AlertDialog.Builder(holder.itemView.context)
+                    .setTitle("Excluir Serviço")
+                    .setMessage("Você tem certeza que deseja excluir este serviço?")
+                    .setPositiveButton("Sim") { _, _ ->
+                        db.collection("servicos").document(id).delete()
+                            .addOnSuccessListener {
+                                Toast.makeText(holder.itemView.context, "Serviço excluído", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(holder.itemView.context, "Erro ao excluir", Toast.LENGTH_SHORT).show()
+                            }
                     }
-                    .addOnFailureListener {
-                        Toast.makeText(holder.itemView.context, "Erro ao excluir", Toast.LENGTH_SHORT).show()
-                    }
+                    .setNegativeButton("Não", null)
+                    .show()
             }
 
             holder.btnEditar?.setOnClickListener {
