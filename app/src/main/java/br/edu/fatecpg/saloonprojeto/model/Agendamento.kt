@@ -4,11 +4,14 @@ import com.google.firebase.Timestamp
 
 data class Agendamento(
     val id: String = "",
-    val userId: String = "",
+    val clienteId: String = "",
     val salaoId: String = "",
+    val servicoId: String = "",
     val nomeUsuario: String = "",
     val nomeSalao: String = "",
-    val data: Timestamp? = null,
     val servico: String = "",
-    val status: String = ""
+    val dataInicio: Timestamp? = null,
+    val dataFim: Timestamp? = null,
+    val status: String = "",
+    val createdAt: Timestamp? = null
 )

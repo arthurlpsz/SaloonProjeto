@@ -33,6 +33,7 @@ class AgendarFragment : Fragment() {
     private lateinit var btnHoje: Button
     private lateinit var btnAmanha: Button
     private lateinit var btnOutroDia: Button
+    private lateinit var btnConfirmarAgendamento: Button
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -40,11 +41,13 @@ class AgendarFragment : Fragment() {
     private var salaoId: String? = null
     private var servicoId: String? = null
     private var servicoDuracaoMin = 45
+    private var nomeServico: String? = null
 
     private lateinit var slotAdapter: TimeSlotAdapter
     private val listaSlots = mutableListOf<String>()
 
     private var selectedDate: Calendar = Calendar.getInstance()
+    private var selectedSlot: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,10 +72,12 @@ class AgendarFragment : Fragment() {
         btnHoje = view.findViewById(R.id.btn_hoje)
         btnAmanha = view.findViewById(R.id.btn_amanha)
         btnOutroDia = view.findViewById(R.id.btn_outro_dia)
+        btnConfirmarAgendamento = view.findViewById(R.id.btn_confirmar_agendamento)
 
         rvSlots.layoutManager = LinearLayoutManager(requireContext())
         slotAdapter = TimeSlotAdapter(listaSlots) { horaSelecionada ->
-            confirmarAgendamento(horaSelecionada)
+            selectedSlot = horaSelecionada
+            btnConfirmarAgendamento.visibility = View.VISIBLE
         }
         rvSlots.adapter = slotAdapter
 
@@ -86,6 +91,12 @@ class AgendarFragment : Fragment() {
 
         imgVoltar.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        btnConfirmarAgendamento.setOnClickListener {
+            selectedSlot?.let { slot ->
+                confirmarAgendamento(slot)
+            }
         }
 
         // Load slots for today initially
@@ -123,6 +134,8 @@ class AgendarFragment : Fragment() {
     }
 
     private fun carregarSlots() {
+        btnConfirmarAgendamento.visibility = View.GONE
+        selectedSlot = null
         if (salaoId == null || servicoId == null) {
             Toast.makeText(requireContext(), "Erro: dados ausentes.", Toast.LENGTH_SHORT).show()
             return
@@ -132,6 +145,7 @@ class AgendarFragment : Fragment() {
             try {
                 val servicoDoc = db.collection("servicos").document(servicoId!!).get().await()
                 servicoDuracaoMin = servicoDoc.getLong("duracaoMin")?.toInt() ?: 45
+                nomeServico = servicoDoc.getString("nome")
 
                 val salaoDoc = db.collection("usuarios").document(salaoId!!).get().await()
                 val workingHours = salaoDoc.get("workingHours") as? Map<*, *>
@@ -242,34 +256,46 @@ class AgendarFragment : Fragment() {
     private fun confirmarAgendamento(hora: String) {
         val userId = auth.currentUser?.uid ?: return
 
-        val partes = hora.split(":")
-        val h = partes[0].toInt()
-        val m = partes[1].toInt()
-
-        val cInicio = (selectedDate.clone() as Calendar).apply {
-            set(Calendar.HOUR_OF_DAY, h)
-            set(Calendar.MINUTE, m)
-            set(Calendar.SECOND, 0)
-        }
-
-        val inicio = Timestamp(cInicio.time)
-        val fim = Timestamp(Date(cInicio.timeInMillis + servicoDuracaoMin * 60000L))
-
-        val dados = hashMapOf(
-            "salaoId" to salaoId,
-            "clienteId" to userId,
-            "servicoId" to servicoId,
-            "dataInicio" to inicio,
-            "dataFim" to fim,
-            "status" to "agendado",
-            "createdAt" to Timestamp.now()
-        )
-
         lifecycleScope.launch {
             try {
+                val userDoc = db.collection("usuarios").document(userId).get().await()
+                val nomeUsuario = userDoc.getString("nome")
+
+                val salaoDoc = db.collection("usuarios").document(salaoId!!).get().await()
+                val nomeSalao = salaoDoc.getString("nomeSalao")
+
+                val partes = hora.split(":")
+                val h = partes[0].toInt()
+                val m = partes[1].toInt()
+
+                val cInicio = (selectedDate.clone() as Calendar).apply {
+                    set(Calendar.HOUR_OF_DAY, h)
+                    set(Calendar.MINUTE, m)
+                    set(Calendar.SECOND, 0)
+                }
+
+                val inicio = Timestamp(cInicio.time)
+                val fim = Timestamp(Date(cInicio.timeInMillis + servicoDuracaoMin * 60000L))
+
+                val dados = hashMapOf(
+                    "salaoId" to salaoId,
+                    "clienteId" to userId,
+                    "servicoId" to servicoId,
+                    "nomeUsuario" to nomeUsuario,
+                    "nomeSalao" to nomeSalao,
+                    "servico" to nomeServico,
+                    "dataInicio" to inicio,
+                    "dataFim" to fim,
+                    "status" to "Confirmado",
+                    "createdAt" to Timestamp.now()
+                )
+
                 db.collection("agendamentos").add(dados).await()
                 Toast.makeText(requireContext(), "Agendado com sucesso!", Toast.LENGTH_LONG).show()
+                btnConfirmarAgendamento.visibility = View.GONE
+                selectedSlot = null
                 carregarSlots()
+
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Erro ao agendar: ${e.message}", Toast.LENGTH_LONG).show()
             }

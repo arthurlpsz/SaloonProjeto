@@ -37,8 +37,7 @@ class AgendamentoAdapter(
         return when (items[position]) {
             is ListItem.HeaderItem -> VIEW_TYPE_HEADER
             is ListItem.AgendamentoItem -> VIEW_TYPE_AGENDAMENTO
-            else -> {}
-        } as Int
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -91,7 +90,7 @@ class AgendamentoAdapter(
                 nameTextView.text = "Salão: ${agendamento.nomeSalao}"
             }
 
-            agendamento.data?.toDate()?.let {
+            agendamento.dataInicio?.toDate()?.let {
                 val sdfData = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val sdfHora = SimpleDateFormat("HH:mm", Locale.getDefault())
                 bookingDate.text = sdfData.format(it)

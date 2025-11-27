@@ -5,7 +5,7 @@
         android:icon="@drawable/home"
         android:title="Início" />
     <item
-        android:id="@+id/salaoAgendamentosFragment"
+        android:id="@+id/clienteAgendamentosFragment"
         android:icon="@drawable/calendar_clock"
         android:title="Agendamentos" />
     <item

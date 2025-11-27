@@ -20,8 +20,19 @@
         <action
             android:id="@+id/action_home_to_perfil"
             app:destination="@id/perfilFragment" />
+
+        <action
+            android:id="@+id/action_dashboardClienteFragment_to_clienteAgendamentosFragment"
+            app:destination="@id/clienteAgendamentosFragment" />
     </fragment>
 
+    <!-- ===================== AGENDAMENTOS DO CLIENTE (NOVO) ===================== -->
+
+    <fragment
+        android:id="@+id/clienteAgendamentosFragment"
+        android:name="br.edu.fatecpg.saloonprojeto.fragments.ClienteAgendamentosFragment"
+        android:label="Agendamentos"
+        tools:layout="@layout/fragment_cliente_agendamentos" />
 
     <!-- ===================== SERVIÇOS DO SALÃO ===================== -->
 
