@@ -104,6 +104,7 @@ class DashboardClienteFragment : Fragment() {
             .whereEqualTo("tipo", "salao")
             .get()
             .addOnSuccessListener { result ->
+                Log.d("DashboardClienteFragment", "Sucesso! Número de salões encontrados: ${result.size()}")
                 salaoList.clear()
                 for (document in result) {
                     val salao = document.data as HashMap<String, Any>
@@ -113,6 +114,7 @@ class DashboardClienteFragment : Fragment() {
                 filterSaloes(searchView.query.toString()) // Filtra com o texto atual da busca
             }
             .addOnFailureListener { exception ->
+                Log.e("DashboardClienteFragment", "Falha ao carregar salões.", exception)
                 // Lidar com o erro aqui, talvez mostrando uma mensagem
             }
     }

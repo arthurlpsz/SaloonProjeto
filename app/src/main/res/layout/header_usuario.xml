@@ -9,16 +9,27 @@
     android:paddingTop="16dp"
     android:paddingBottom="16dp">
 
-    <ImageView
-        android:id="@+id/profile_image"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv_profile_image"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
-        android:contentDescription="@string/foto_do_usuario"
-        android:src="@drawable/default_user"
+        app:cardCornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/white"
+        app:strokeWidth="2dp">
+
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/foto_do_usuario"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_user" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -26,10 +37,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/profile_image"
+        app:layout_constraintBottom_toBottomOf="@+id/mcv_profile_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/profile_image"
-        app:layout_constraintTop_toTopOf="@+id/profile_image">
+        app:layout_constraintStart_toEndOf="@+id/mcv_profile_image"
+        app:layout_constraintTop_toTopOf="@+id/mcv_profile_image">
 
         <TextView
             android:id="@+id/welcome_message"

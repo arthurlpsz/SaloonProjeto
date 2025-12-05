@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class CadastroActivity : AppCompatActivity() {
@@ -81,9 +82,11 @@ class CadastroActivity : AppCompatActivity() {
                     val userId = result.user?.uid ?: return@addOnSuccessListener
 
                     val userData = hashMapOf(
+                        "userId" to userId,
                         "tipo" to if (isClientSelected) "cliente" else "salao",
                         "telefone" to phone,
-                        "email" to email
+                        "email" to email,
+                        "adicionadoEm" to FieldValue.serverTimestamp()
                     )
 
                     if (isClientSelected) {
@@ -99,8 +102,9 @@ class CadastroActivity : AppCompatActivity() {
                         .addOnSuccessListener {
                             Toast.makeText(this, "Cadastro realizado com sucesso!", Toast.LENGTH_SHORT).show()
 
-                            // Redirecionar após sucesso → volta para a tela de login
-                            startActivity(Intent(this, LoginActivity::class.java))
+                            val intent = Intent(this, IntroActivity::class.java)
+                            intent.putExtra("userId", userId)
+                            startActivity(intent)
                             finish()
                         }
                         .addOnFailureListener { e ->
@@ -111,6 +115,7 @@ class CadastroActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     Toast.makeText(this, "Erro ao criar conta: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
+
         }
 
         clientButton.setOnClickListener { selectClientForm() }
