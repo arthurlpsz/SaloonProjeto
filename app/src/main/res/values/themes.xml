@@ -10,7 +10,7 @@
 
     <!-- Custom Widget Style for BottomNavigationView -->
     <style name="App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="android:background">@color/petrol_blue</item>
+        <item name="android:background">@color/azul_petroleo</item>
         <item name="itemIconTint">@color/bottom_nav_icon_color_selector</item>
         <item name="itemTextColor">@color/bottom_nav_item_color_selector</item>
         <item name="itemActiveIndicatorStyle">@style/App.BottomNavigationView.ActiveIndicator</item>
@@ -18,7 +18,7 @@
 
     <!-- Custom Style for the Active Indicator -->
     <style name="App.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">@color/indicator_blue</item>
+        <item name="android:color">@color/azul_petroleo</item>
     </style>
 
     <!-- Custom Style for SearchView -->

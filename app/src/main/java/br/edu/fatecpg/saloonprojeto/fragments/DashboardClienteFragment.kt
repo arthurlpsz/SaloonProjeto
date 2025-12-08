@@ -54,13 +54,9 @@ class DashboardClienteFragment : Fragment() {
 
         setupSearchView()
         loadSaloes()
+        loadHeaderInfo()
 
         return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        loadHeaderInfo()
     }
 
     private fun loadHeaderInfo() {
@@ -71,13 +67,13 @@ class DashboardClienteFragment : Fragment() {
                     if (document != null && document.exists()) {
                         userName.text = document.getString("nome")
 
-                        val imageUrl = document.getString("imageUrl")
-                        if (!imageUrl.isNullOrEmpty()) {
-                            Glide.with(this)
-                                .load(imageUrl)
-                                .centerCrop()
-                                .into(profileImage)
-                        }
+                        val imageUrl = document.getString("fotoUrl")
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_person)
+                            .error(R.drawable.ic_person)
+                            .centerCrop()
+                            .into(profileImage)
                     }
                 }
                 .addOnFailureListener { exception ->

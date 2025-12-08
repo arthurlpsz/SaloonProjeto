@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
@@ -26,6 +27,7 @@ class CadastroActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_cadastro)
 
         auth = FirebaseAuth.getInstance()
@@ -127,9 +129,9 @@ class CadastroActivity : AppCompatActivity() {
     private fun selectClientForm() {
         isClientSelected = true
         clientButton.setBackgroundResource(R.drawable.button_selected_background)
-        clientButton.setTextColor(ContextCompat.getColor(this, R.color.white))
+        clientButton.setTextColor(ContextCompat.getColor(this, R.color.branco))
         salonButton.setBackgroundResource(R.drawable.button_unselected_background)
-        salonButton.setTextColor(ContextCompat.getColor(this, R.color.petrol_blue))
+        salonButton.setTextColor(ContextCompat.getColor(this, R.color.azul_petroleo))
         clientFields.visibility = View.VISIBLE
         salonFields.visibility = View.GONE
     }
@@ -137,9 +139,9 @@ class CadastroActivity : AppCompatActivity() {
     private fun selectSalonForm() {
         isClientSelected = false
         salonButton.setBackgroundResource(R.drawable.button_selected_background)
-        salonButton.setTextColor(ContextCompat.getColor(this, R.color.white))
+        salonButton.setTextColor(ContextCompat.getColor(this, R.color.branco))
         clientButton.setBackgroundResource(R.drawable.button_unselected_background)
-        clientButton.setTextColor(ContextCompat.getColor(this, R.color.petrol_blue))
+        clientButton.setTextColor(ContextCompat.getColor(this, R.color.azul_petroleo))
         salonFields.visibility = View.VISIBLE
         clientFields.visibility = View.GONE
     }

@@ -50,7 +50,7 @@ class SalaoDashboardFragment : Fragment() {
         servicoAdapter = ServicoAdapter(servicosList, db, true) // true para a visão do salão
         recyclerView.adapter = servicoAdapter
 
-        val fabAdicionarServico = view.findViewById<FloatingActionButton>(R.id.fab_add_service)
+        val fabAdicionarServico = view.findViewById<FloatingActionButton>(R.id.fab_add_servico)
         fabAdicionarServico.setOnClickListener {
             findNavController().navigate(R.id.action_salaoDashboard_to_adicionarServico)
         }

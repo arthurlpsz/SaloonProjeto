@@ -48,7 +48,7 @@ class SalaoHorariosFragment : Fragment() {
 
         rvDias = view.findViewById(R.id.rv_horarios)
         btnSalvar = view.findViewById(R.id.btn_salvar_horarios)
-        ivBack = view.findViewById(R.id.iv_back)
+        ivBack = view.findViewById(R.id.ic_voltar)
 
         rvDias.layoutManager = LinearLayoutManager(requireContext())
         rvDias.adapter = HorarioDiaAdapter(diasDisplay, diasKeys)

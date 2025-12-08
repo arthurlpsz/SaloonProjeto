@@ -23,14 +23,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ClienteAgendamentosFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: AgendamentoAdapter
-    private val listItems = mutableListOf<ListItem>()
+    // Lists and Adapters for the two RecyclerViews
+    private lateinit var rvPendentes: RecyclerView
+    private lateinit var rvConcluidos: RecyclerView
+    private lateinit var adapterPendentes: AgendamentoAdapter
+    private lateinit var adapterConcluidos: AgendamentoAdapter
+    private val listItemsPendentes = mutableListOf<ListItem>()
+    private val listItemsConcluidos = mutableListOf<ListItem>()
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
-    // Views do Header
+    // Header Views
     private lateinit var profileImage: ImageView
     private lateinit var userName: TextView
 
@@ -40,17 +44,32 @@ class ClienteAgendamentosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_cliente_agendamentos, container, false)
-        recyclerView = view.findViewById(R.id.cliente_bookings_recycler_view) // Corrigido para o ID correto
-        recyclerView.layoutManager = LinearLayoutManager(context)
 
+        // Initialize RecyclerViews
+        rvPendentes = view.findViewById(R.id.rv_pendentes)
+        rvConcluidos = view.findViewById(R.id.rv_concluidos)
+        rvPendentes.layoutManager = LinearLayoutManager(context)
+        rvConcluidos.layoutManager = LinearLayoutManager(context)
+
+        // Prevent nested scrolling issues
+        rvPendentes.isNestedScrollingEnabled = false
+        rvConcluidos.isNestedScrollingEnabled = false
+
+        // Initialize Adapters
+        adapterPendentes = AgendamentoAdapter(listItemsPendentes, AgendamentoViewType.CLIENTE) { agendamento ->
+            cancelarAgendamento(agendamento)
+        }
+        adapterConcluidos = AgendamentoAdapter(listItemsConcluidos, AgendamentoViewType.CLIENTE) { agendamento ->
+            cancelarAgendamento(agendamento)
+        }
+
+        rvPendentes.adapter = adapterPendentes
+        rvConcluidos.adapter = adapterConcluidos
+
+        // Initialize Header
         val headerView = view.findViewById<View>(R.id.header_view)
         profileImage = headerView.findViewById(R.id.profile_image)
         userName = headerView.findViewById(R.id.user_name)
-
-        adapter = AgendamentoAdapter(listItems, AgendamentoViewType.CLIENTE) { agendamento ->
-            cancelarAgendamento(agendamento)
-        }
-        recyclerView.adapter = adapter
 
         return view
     }
@@ -66,22 +85,17 @@ class ClienteAgendamentosFragment : Fragment() {
         if (userId != null) {
             db.collection("usuarios").document(userId).get()
                 .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
+                    if (document != null && document.exists() && isAdded) {
                         val name = document.getString("nome")
+                        userName.text = name ?: "Nome não encontrado"
 
-                        if (!name.isNullOrBlank()) {
-                            userName.text = name
-                        } else {
-                            userName.text = "Nome não encontrado"
-                        }
-
-                        val imageUrl = document.getString("imageUrl")
-                        if (!imageUrl.isNullOrEmpty()) {
-                            Glide.with(this)
-                                .load(imageUrl)
-                                .centerCrop()
-                                .into(profileImage)
-                        }
+                        val imageUrl = document.getString("fotoUrl")
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_person)
+                            .error(R.drawable.ic_person)
+                            .centerCrop()
+                            .into(profileImage)
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -97,30 +111,54 @@ class ClienteAgendamentosFragment : Fragment() {
             .whereEqualTo("clienteId", clienteId)
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
+                    Log.w("ClienteAgendamentos", "Erro ao ouvir agendamentos.", e)
                     return@addSnapshotListener
                 }
 
-                listItems.clear()
-                val agendamentos = snapshots?.map { it.toObject(Agendamento::class.java).copy(id = it.id) } ?: emptyList()
-
-                val proximos = agendamentos.filter { it.status == "Confirmado" }
-                val historico = agendamentos.filter { it.status == "Cancelado" || it.status == "Realizado" }
-
-                if (proximos.isNotEmpty()) {
-                    listItems.add(ListItem.HeaderItem("Próximos Agendamentos"))
-                    proximos.forEach { listItems.add(ListItem.AgendamentoItem(it)) }
+                if (snapshots == null) {
+                    Log.d("ClienteAgendamentos", "Snapshot nulo.")
+                    return@addSnapshotListener
                 }
 
-                if (historico.isNotEmpty()) {
-                    listItems.add(ListItem.HeaderItem("Histórico"))
-                    historico.forEach { listItems.add(ListItem.AgendamentoItem(it)) }
+                val agendamentos = mutableListOf<Agendamento>()
+                for (document in snapshots.documents) {
+                    document.toObject(Agendamento::class.java)?.let {
+                        it.id = document.id
+                        agendamentos.add(it)
+                    }
                 }
 
-                adapter.notifyDataSetChanged()
+                // Clear lists before populating
+                listItemsPendentes.clear()
+                listItemsConcluidos.clear()
+
+                val pendentes = agendamentos.filter { it.status == "Confirmado" }.sortedBy { it.dataInicio }
+                val concluidos = agendamentos.filter { it.status == "Cancelado" || it.status == "Realizado" }.sortedByDescending { it.dataInicio }
+
+                // Populate pendentes list
+                if (pendentes.isEmpty()) {
+                    listItemsPendentes.add(ListItem.EmptyItem)
+                } else {
+                    pendentes.forEach { listItemsPendentes.add(ListItem.AgendamentoItem(it)) }
+                }
+
+                // Populate concluídos list
+                if (concluidos.isEmpty()) {
+                    listItemsConcluidos.add(ListItem.EmptyItem)
+                } else {
+                    concluidos.forEach { listItemsConcluidos.add(ListItem.AgendamentoItem(it)) }
+                }
+
+                if (isAdded) {
+                    adapterPendentes.notifyDataSetChanged()
+                    adapterConcluidos.notifyDataSetChanged()
+                    Log.d("ClienteAgendamentos", "Adapters notificados.")
+                }
             }
     }
 
     private fun cancelarAgendamento(agendamento: Agendamento) {
+        if (!isAdded) return
         AlertDialog.Builder(requireContext())
             .setTitle("Cancelar Agendamento")
             .setMessage("Você tem certeza que deseja cancelar este agendamento?")
@@ -128,10 +166,10 @@ class ClienteAgendamentosFragment : Fragment() {
                 db.collection("agendamentos").document(agendamento.id)
                     .update("status", "Cancelado")
                     .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Agendamento cancelado com sucesso", Toast.LENGTH_SHORT).show()
+                        if (isAdded) Toast.makeText(context, "Agendamento cancelado com sucesso", Toast.LENGTH_SHORT).show()
                     }
-                    .addOnFailureListener { e ->
-                        Toast.makeText(requireContext(), "Erro ao cancelar o agendamento: ${e.message}", Toast.LENGTH_SHORT).show()
+                    .addOnFailureListener { error ->
+                        if (isAdded) Toast.makeText(context, "Erro ao cancelar: ${error.message}", Toast.LENGTH_SHORT).show()
                     }
             }
             .setNegativeButton("Não", null)

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@color/branco"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp">
 
@@ -21,7 +21,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:background="@color/gold" />
+            tools:background="@color/dourado" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
@@ -35,7 +35,7 @@
                 android:id="@+id/service_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/azul_petroleo"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                android:textColor="@color/indicator_blue"
+                android:textColor="@color/preto"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/service_name"
@@ -60,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="16dp"
-                android:background="@color/gold"
+                android:background="@color/dourado"
                 android:alpha="0.5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -72,8 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Data:"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="@color/gold"
+                android:textColor="@color/dourado"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/divider" />
 
@@ -83,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/azul_petroleo"
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@+id/label_data"
                 app:layout_constraintStart_toEndOf="@+id/label_data"
@@ -96,7 +95,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Hora:"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="@color/gold"
+                android:textColor="@color/dourado"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/label_data" />
 
@@ -106,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:textAppearance="?attr/textAppearanceBodyLarge"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/azul_petroleo"
                 android:textStyle="bold"
                 app:layout_constraintBaseline_toBaselineOf="@+id/label_hora"
                 app:layout_constraintStart_toEndOf="@+id/label_hora"
@@ -118,13 +117,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="@color/indicator_blue"
-                android:textStyle="bold|italic"
+                android:text="Confirmado"
+                android:textColor="@color/preto"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/label_hora"
-                tools:text="Confirmado" />
+                app:layout_constraintTop_toBottomOf="@+id/label_hora" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_cancelar"
@@ -132,8 +130,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancelar"
-                android:textColor="@color/gold"
-                app:strokeColor="@color/gold"
+                android:textColor="@color/dourado"
+                app:strokeColor="@color/dourado"
                 app:layout_constraintBottom_toBottomOf="@+id/booking_status"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/booking_status" />

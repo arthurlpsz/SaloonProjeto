@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/branco"
     tools:context=".fragments.EditarPerfilFragment">
 
     <ImageView
-        android:id="@+id/iv_back"
+        android:id="@+id/ic_voltar"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:contentDescription="@string/seta_para_voltar"
-        android:src="@drawable/voltar"
+        android:src="@drawable/ic_voltar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,23 +24,46 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/editar_perfil"
-        android:textColor="@color/petrol_blue"
+        android:textColor="@color/azul_petroleo"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_person"
+        app:civ_border_color="@color/azul_petroleo"
+        app:civ_border_width="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txv_saloes_disponiveis" />
+
+    <Button
+        android:id="@+id/btn_change_photo"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Alterar foto"
+        android:textColor="@color/dourado"
+        app:layout_constraintEnd_toEndOf="@+id/profile_image"
+        app:layout_constraintStart_toStartOf="@+id/profile_image"
+        app:layout_constraintTop_toBottomOf="@+id/profile_image" />
+
     <TextView
         android:id="@+id/name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:text="@string/nome_do_usuario"
-        android:textColor="@color/petrol_blue"
+        android:textColor="@color/azul_petroleo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txv_saloes_disponiveis" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_change_photo" />
 
     <EditText
         android:id="@+id/edt_nome"
@@ -66,7 +89,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:text="@string/email"
-        android:textColor="@color/petrol_blue"
+        android:textColor="@color/azul_petroleo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edt_nome" />
 
@@ -94,7 +117,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:text="@string/telefone"
-        android:textColor="@color/petrol_blue"
+        android:textColor="@color/azul_petroleo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edt_email" />
 
@@ -122,7 +145,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:text="@string/endereco"
-        android:textColor="@color/petrol_blue"
+        android:textColor="@color/azul_petroleo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edt_telefone" />
 
@@ -140,8 +163,7 @@
         android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endereco_label"
-        tools:ignore="LabelFor" />
+        app:layout_constraintTop_toBottomOf="@+id/endereco_label" />
 
     <Button
         android:id="@+id/btn_salvar"
@@ -150,9 +172,9 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:backgroundTint="@color/gold"
+        android:backgroundTint="@color/dourado"
         android:text="@string/salvar_alteracoes"
-        android:textColor="@color/white"
+        android:textColor="@color/branco"
         android:textSize="18sp"
         app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"

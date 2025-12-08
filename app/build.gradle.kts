@@ -1,9 +1,19 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id ("com.google.gms.google-services")
-    id ("kotlin-kapt")
-    id ("androidx.navigation.safeargs.kotlin")
+    id("com.google.gms.google-services")
+    id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
+}
+
+// Lê as propriedades do arquivo local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -18,6 +28,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Disponibiliza as credenciais do Cloudinary de forma segura
+        buildConfigField("String", "CLOUDINARY_CLOUD_NAME", localProperties.getProperty("cloudinary.cloudName"))
+        buildConfigField("String", "CLOUDINARY_API_KEY", localProperties.getProperty("cloudinary.apiKey"))
+        buildConfigField("String", "CLOUDINARY_API_SECRET", localProperties.getProperty("cloudinary.apiSecret"))
     }
 
     buildTypes {
@@ -35,6 +50,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
@@ -60,4 +78,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    // Cloudinary
+    implementation("com.cloudinary:cloudinary-android:2.4.0")
 }

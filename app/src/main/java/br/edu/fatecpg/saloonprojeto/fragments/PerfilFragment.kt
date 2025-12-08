@@ -12,8 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import br.edu.fatecpg.saloonprojeto.LoginActivity
 import br.edu.fatecpg.saloonprojeto.R
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import de.hdodenhof.circleimageview.CircleImageView
 
 class PerfilFragment : Fragment() {
 
@@ -21,6 +23,7 @@ class PerfilFragment : Fragment() {
     private lateinit var emailPerfil: TextView
     private lateinit var telefonePerfil: TextView
     private lateinit var btnLogout: Button
+    private lateinit var profileImage: CircleImageView
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
@@ -43,6 +46,7 @@ class PerfilFragment : Fragment() {
         emailPerfil = view.findViewById(R.id.txv_email)
         telefonePerfil = view.findViewById(R.id.txv_telefone)
         btnLogout = view.findViewById(R.id.btn_logout)
+        profileImage = view.findViewById(R.id.profile_image)
 
         // Botão editar perfil
         val editProfileButton = view.findViewById<Button>(R.id.btn_editar_perfil)
@@ -109,6 +113,13 @@ class PerfilFragment : Fragment() {
                         if (telefone != null) {
                             telefonePerfil.text = formatPhoneNumber(telefone)
                         }
+
+                        val imageUrl = document.getString("fotoUrl")
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_person) 
+                            .error(R.drawable.ic_person)
+                            .into(profileImage)
                     }
                 }
                 .addOnFailureListener { exception ->

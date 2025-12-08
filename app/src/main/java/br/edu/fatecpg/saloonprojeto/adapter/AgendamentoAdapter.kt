@@ -13,8 +13,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 sealed class ListItem {
-    data class HeaderItem(val title: String) : ListItem()
     data class AgendamentoItem(val agendamento: Agendamento) : ListItem()
+    object EmptyItem : ListItem()
 }
 
 enum class AgendamentoViewType {
@@ -29,26 +29,26 @@ class AgendamentoAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
-        private const val VIEW_TYPE_HEADER = 0
-        private const val VIEW_TYPE_AGENDAMENTO = 1
+        private const val VIEW_TYPE_AGENDAMENTO = 0
+        private const val VIEW_TYPE_EMPTY = 1
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
-            is ListItem.HeaderItem -> VIEW_TYPE_HEADER
             is ListItem.AgendamentoItem -> VIEW_TYPE_AGENDAMENTO
+            is ListItem.EmptyItem -> VIEW_TYPE_EMPTY
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            VIEW_TYPE_HEADER -> {
-                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_header, parent, false)
-                HeaderViewHolder(view)
-            }
             VIEW_TYPE_AGENDAMENTO -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_agendamento, parent, false)
                 AgendamentoViewHolder(view)
+            }
+            VIEW_TYPE_EMPTY -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_agendamento_vazio, parent, false)
+                EmptyViewHolder(view)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -56,20 +56,16 @@ class AgendamentoAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
-            is ListItem.HeaderItem -> (holder as HeaderViewHolder).bind(item)
             is ListItem.AgendamentoItem -> (holder as AgendamentoViewHolder).bind(item.agendamento)
+            is ListItem.EmptyItem -> {
+                // O EmptyViewHolder não precisa de bind
+            }
         }
     }
 
     override fun getItemCount() = items.size
 
-    inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val headerTitle: TextView = itemView.findViewById(R.id.header_title)
-
-        fun bind(header: ListItem.HeaderItem) {
-            headerTitle.text = header.title
-        }
-    }
+    class EmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     inner class AgendamentoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val serviceName: TextView = itemView.findViewById(R.id.service_name)

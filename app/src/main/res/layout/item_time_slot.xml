@@ -13,7 +13,7 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp"
     app:rippleColor="@android:color/transparent"
-    app:strokeColor="@color/gold"
+    app:strokeColor="@color/dourado"
     app:strokeWidth="1dp">
 
     <TextView

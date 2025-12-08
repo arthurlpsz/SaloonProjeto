@@ -47,7 +47,7 @@ class DefinirHorariosFragment : Fragment() {
             salvarHorarios()
         }
 
-        view.findViewById<ImageView>(R.id.iv_back).setOnClickListener {
+        view.findViewById<ImageView>(R.id.ic_voltar).setOnClickListener {
             findNavController().navigateUp()
         }
     }

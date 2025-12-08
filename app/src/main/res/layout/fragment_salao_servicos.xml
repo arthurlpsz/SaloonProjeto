@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/branco"
     tools:context=".fragments.SalaoServicosFragment">
 
     <include
@@ -15,9 +15,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/ic_voltar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="16dp"
         android:src="@drawable/ic_voltar"
         app:layout_constraintBottom_toBottomOf="@+id/txv_saloes_disponiveis"
@@ -26,16 +26,26 @@
 
     <TextView
         android:id="@+id/txv_saloes_disponiveis"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:gravity="center"
         android:text="Serviços Disponíveis"
-        android:textColor="@color/petrol_blue"
+        android:textColor="@color/azul_petroleo"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/ic_voltar_placeholder"
+        app:layout_constraintStart_toEndOf="@+id/ic_voltar"
         app:layout_constraintTop_toBottomOf="@+id/header_view" />
+
+    <Space
+        android:id="@+id/ic_voltar_placeholder"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txv_saloes_disponiveis"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txv_saloes_disponiveis" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/services_recycler_view"

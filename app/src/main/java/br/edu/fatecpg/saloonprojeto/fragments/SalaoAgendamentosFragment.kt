@@ -23,14 +23,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class SalaoAgendamentosFragment : Fragment() {
 
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: AgendamentoAdapter
-    private val listItems = mutableListOf<ListItem>()
+    private lateinit var rvPendentes: RecyclerView
+    private lateinit var rvHistorico: RecyclerView
+    private lateinit var adapterPendentes: AgendamentoAdapter
+    private lateinit var adapterHistorico: AgendamentoAdapter
+    private val listItemsPendentes = mutableListOf<ListItem>()
+    private val listItemsHistorico = mutableListOf<ListItem>()
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
 
-    // Views do Header
     private lateinit var profileImage: ImageView
     private lateinit var userName: TextView
 
@@ -40,17 +42,28 @@ class SalaoAgendamentosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_salao_agendamentos, container, false)
-        recyclerView = view.findViewById(R.id.salao_bookings_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        rvPendentes = view.findViewById(R.id.rv_pendentes_salao)
+        rvHistorico = view.findViewById(R.id.rv_historico_salao)
+        rvPendentes.layoutManager = LinearLayoutManager(context)
+        rvHistorico.layoutManager = LinearLayoutManager(context)
+
+        rvPendentes.isNestedScrollingEnabled = false
+        rvHistorico.isNestedScrollingEnabled = false
+
+        adapterPendentes = AgendamentoAdapter(listItemsPendentes, AgendamentoViewType.SALAO) { agendamento ->
+            cancelarAgendamento(agendamento)
+        }
+        adapterHistorico = AgendamentoAdapter(listItemsHistorico, AgendamentoViewType.SALAO) { agendamento ->
+            // O botão de cancelar não deve aparecer no histórico, mas mantemos por consistência
+        }
+
+        rvPendentes.adapter = adapterPendentes
+        rvHistorico.adapter = adapterHistorico
 
         val headerView = view.findViewById<View>(R.id.header_view)
         profileImage = headerView.findViewById(R.id.profile_image)
         userName = headerView.findViewById(R.id.user_name)
-
-        adapter = AgendamentoAdapter(listItems, AgendamentoViewType.SALAO) { agendamento ->
-            cancelarAgendamento(agendamento)
-        }
-        recyclerView.adapter = adapter
 
         return view
     }
@@ -66,31 +79,21 @@ class SalaoAgendamentosFragment : Fragment() {
         if (userId != null) {
             db.collection("usuarios").document(userId).get()
                 .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        val userType = document.getString("tipo")
-                        val name = if (userType == "salao") {
-                            document.getString("nomeSalao")
-                        } else {
-                            document.getString("nome")
-                        }
+                    if (document != null && document.exists() && isAdded) {
+                        val name = document.getString("nomeSalao") ?: "Salão sem nome"
+                        userName.text = name
 
-                        if (!name.isNullOrBlank()) {
-                            userName.text = name
-                        } else {
-                            userName.text = "Nome não encontrado"
-                        }
-
-                        val imageUrl = document.getString("imageUrl")
-                        if (!imageUrl.isNullOrEmpty()) {
-                            Glide.with(this)
-                                .load(imageUrl)
-                                .centerCrop()
-                                .into(profileImage)
-                        }
+                        val imageUrl = document.getString("fotoUrl") // Padronizado para "fotoUrl"
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_person)
+                            .error(R.drawable.ic_person)
+                            .centerCrop()
+                            .into(profileImage)
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.e("SalaoAgendamentosFragment", "Erro ao carregar informações do cabeçalho", exception)
+                    Log.e("SalaoAgendamentos", "Erro ao carregar informações do cabeçalho", exception)
                 }
         }
     }
@@ -102,30 +105,44 @@ class SalaoAgendamentosFragment : Fragment() {
             .whereEqualTo("salaoId", salaoId)
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
+                    Log.w("SalaoAgendamentos", "Erro ao ouvir agendamentos.", e)
                     return@addSnapshotListener
                 }
 
-                listItems.clear()
-                val agendamentos = snapshots?.map { it.toObject(Agendamento::class.java).copy(id = it.id) } ?: emptyList()
-
-                val proximos = agendamentos.filter { it.status == "Confirmado" }
-                val historico = agendamentos.filter { it.status == "Cancelado" || it.status == "Realizado" }
-
-                if (proximos.isNotEmpty()) {
-                    listItems.add(ListItem.HeaderItem("Próximos Agendamentos"))
-                    proximos.forEach { listItems.add(ListItem.AgendamentoItem(it)) }
+                if (snapshots == null) {
+                    return@addSnapshotListener
                 }
 
-                if (historico.isNotEmpty()) {
-                    listItems.add(ListItem.HeaderItem("Histórico"))
-                    historico.forEach { listItems.add(ListItem.AgendamentoItem(it)) }
+                val agendamentos = snapshots.map { it.toObject(Agendamento::class.java).copy(id = it.id) }
+
+                listItemsPendentes.clear()
+                listItemsHistorico.clear()
+
+                val pendentes = agendamentos.filter { it.status == "Confirmado" }.sortedBy { it.dataInicio }
+                val historico = agendamentos.filter { it.status == "Cancelado" || it.status == "Realizado" }.sortedByDescending { it.dataInicio }
+
+                if (pendentes.isEmpty()) {
+                    listItemsPendentes.add(ListItem.EmptyItem)
+                } else {
+                    pendentes.forEach { listItemsPendentes.add(ListItem.AgendamentoItem(it)) }
                 }
 
-                adapter.notifyDataSetChanged()
+                if (historico.isEmpty()) {
+                    listItemsHistorico.add(ListItem.EmptyItem)
+                } else {
+                    historico.forEach { listItemsHistorico.add(ListItem.AgendamentoItem(it)) }
+                }
+
+                if (isAdded) {
+                    adapterPendentes.notifyDataSetChanged()
+                    adapterHistorico.notifyDataSetChanged()
+                }
             }
     }
 
     private fun cancelarAgendamento(agendamento: Agendamento) {
+        if (!isAdded) return
+
         AlertDialog.Builder(requireContext())
             .setTitle("Cancelar Agendamento")
             .setMessage("Você tem certeza que deseja cancelar este agendamento?")
@@ -133,10 +150,10 @@ class SalaoAgendamentosFragment : Fragment() {
                 db.collection("agendamentos").document(agendamento.id)
                     .update("status", "Cancelado")
                     .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Agendamento cancelado com sucesso", Toast.LENGTH_SHORT).show()
+                        if(isAdded) Toast.makeText(requireContext(), "Agendamento cancelado com sucesso", Toast.LENGTH_SHORT).show()
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(requireContext(), "Erro ao cancelar o agendamento: ${e.message}", Toast.LENGTH_SHORT).show()
+                        if(isAdded) Toast.makeText(requireContext(), "Erro ao cancelar o agendamento: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
             }
             .setNegativeButton("Não", null)

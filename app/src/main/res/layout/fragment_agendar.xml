@@ -9,24 +9,33 @@
 
     <ImageView
         android:id="@+id/img_voltar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/ic_voltar"
+        app:layout_constraintBottom_toBottomOf="@+id/txv_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/txv_title"
-        app:layout_constraintBottom_toBottomOf="@+id/txv_title"
         tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/txv_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/selecionar_data"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/img_voltar"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="16dp"/>
+        app:layout_constraintEnd_toStartOf="@+id/img_voltar_placeholder"
+        app:layout_constraintStart_toEndOf="@+id/img_voltar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Space
+        android:id="@+id/img_voltar_placeholder"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txv_title" />
 
     <LinearLayout
         android:id="@+id/ll_date_buttons"
@@ -44,31 +53,34 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/button_selected_background"
-            app:backgroundTint="@null"
-            android:textColor="@color/white"
-            android:text="@string/hoje"/>
+            android:text="@string/hoje"
+            android:textColor="@color/branco"
+            android:textSize="14sp"
+            app:backgroundTint="@null" />
 
         <Button
             android:id="@+id/btn_amanha"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:layout_weight="1"
             android:background="@drawable/button_unselected_background"
-            app:backgroundTint="@null"
-            android:textColor="@color/gold"
-            android:text="@string/amanha"/>
+            android:text="@string/amanha"
+            android:textColor="@color/dourado"
+            android:textSize="14sp"
+            app:backgroundTint="@null" />
 
         <Button
             android:id="@+id/btn_outro_dia"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:layout_weight="1.5"
             android:background="@drawable/button_unselected_background"
-            app:backgroundTint="@null"
-            android:textColor="@color/gold"
-            android:text="@string/outro_dia"/>
+            android:text="@string/escolher_data"
+            android:textColor="@color/dourado"
+            android:textSize="14sp"
+            app:backgroundTint="@null" />
     </LinearLayout>
 
     <CalendarView
@@ -106,7 +118,7 @@
         android:id="@+id/btn_confirmar_agendamento"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/gold"
+        android:backgroundTint="@color/dourado"
         android:text="@string/confirmar_agendamento"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

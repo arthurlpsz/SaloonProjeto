@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="petrol_blue">#2C3E50</color>
-    <color name="gold">#CBA350</color>
-    <color name="white">#F9F9F9</color>
-    <color name="black">#FF000000</color>
-    <color name="indicator_blue">#506D85</color>
+    <color name="azul_petroleo">#2C3E50</color>
+    <color name="dourado">#CBA350</color>
+    <color name="branco">#F9F9F9</color>
+    <color name="preto">#000000</color>
+    <color name="cinza_claro">#B5B5B5</color>
+    <color name="cinza">#8C8C8C</color>
 </resources>

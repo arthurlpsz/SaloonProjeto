@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp">
 
     <ImageView
-        android:id="@+id/iv_back"
+        android:id="@+id/ic_voltar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/seta_para_voltar"
         android:src="?attr/homeAsUpIndicator"
-        app:layout_constraintBottom_toBottomOf="@id/tv_title"
+        app:layout_constraintBottom_toBottomOf="@id/txv_gerenciar_horario"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_title"
+        app:layout_constraintTop_toTopOf="@id/txv_gerenciar_horario"
         app:tint="?attr/colorOnSurface" />
 
     <TextView
-        android:id="@+id/tv_title"
+        android:id="@+id/txv_gerenciar_horario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gerenciar Horários"
+        android:text="@string/gerenciar_horarios"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,10 +33,11 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:contentDescription="Lista"
         app:layout_constraintBottom_toTopOf="@+id/btn_salvar_horarios"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_title">
+        app:layout_constraintTop_toBottomOf="@+id/txv_gerenciar_horario">
 
         <LinearLayout
             android:id="@+id/container_horarios"
@@ -51,6 +51,7 @@
         android:id="@+id/btn_salvar_horarios"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:width="260dp"
         android:text="Salvar Horários"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

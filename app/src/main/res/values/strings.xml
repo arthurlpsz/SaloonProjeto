@@ -35,7 +35,6 @@
     <string name="data">Data:</string>
     <string name="hoje">Hoje</string>
     <string name="amanha">Amanhã</string>
-    <string name="outro_dia">Outro dia</string>
     <string name="gerenciar_servicos">Gerenciar Serviços</string>
     <string name="meus_servicos">Meus Serviços</string>
     <string name="editar_perfil">Editar Perfil</string>
@@ -50,4 +49,5 @@
     <string name="escolher_data">Escolher data</string>
     <string name="carregar_horarios">Carregar horários</string>
     <string name="definir_horarios_salao">Definir horários do salão</string>
+    <string name="gerenciar_horarios">Gerenciar Horários</string>
 </resources>

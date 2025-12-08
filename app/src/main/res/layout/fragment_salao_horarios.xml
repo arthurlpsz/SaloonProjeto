@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/iv_back"
+        android:id="@+id/ic_voltar"
         android:src="@drawable/ic_voltar"
         android:layout_width="24dp"
         android:layout_height="24dp"

@@ -55,7 +55,7 @@ class SalaoServicosFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_salao_servicos, container, false)
 
         recyclerView = view.findViewById(R.id.services_recycler_view)
-        ivBack = view.findViewById(R.id.iv_back)
+        ivBack = view.findViewById(R.id.ic_voltar)
         val headerView = view.findViewById<View>(R.id.header_view)
         val profileImageCard = headerView.findViewById<MaterialCardView>(R.id.mcv_profile_image)
         profileImage = headerView.findViewById(R.id.profile_image)

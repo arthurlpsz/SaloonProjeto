@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/petrol_blue"
+    android:background="@color/azul_petroleo"
     tools:context=".CadastroActivity">
 
     <ImageView
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/cadastro"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/azul_petroleo"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +67,7 @@
                     android:background="@drawable/button_selected_background"
                     android:text="@string/cliente"
                     android:textAllCaps="false"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/branco" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/salon_button"
@@ -78,7 +78,7 @@
                     android:background="@drawable/button_unselected_background"
                     android:text="@string/salao"
                     android:textAllCaps="false"
-                    android:textColor="@color/petrol_blue" />
+                    android:textColor="@color/azul_petroleo" />
 
             </LinearLayout>
 
@@ -97,10 +97,10 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/nome_completo"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/azul_petroleo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/role_selector_layout" />
-            
+
             <EditText
                 android:id="@+id/name"
                 android:layout_width="0dp"
@@ -114,6 +114,7 @@
                 android:inputType="textPersonName"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:textColorHint="@color/cinza"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/name_label" />
@@ -133,7 +134,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/nome_do_salao"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/cinza"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/role_selector_layout" />
 
@@ -161,7 +162,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/endereco_do_salao"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/cinza"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/salon_name" />
 
@@ -198,7 +199,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/telefone"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/cinza"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/form_barrier" />
 
@@ -215,6 +216,7 @@
                 android:inputType="phone"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:textColorHint="@color/cinza"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/phone_label" />
@@ -226,7 +228,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/email"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/cinza"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/phone" />
 
@@ -243,6 +245,7 @@
                 android:inputType="textEmailAddress"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:textColorHint="@color/cinza"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/email_label" />
@@ -254,7 +257,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/senha"
-                android:textColor="@color/petrol_blue"
+                android:textColor="@color/cinza"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/email" />
 
@@ -271,6 +274,7 @@
                 android:inputType="textPassword"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:textColorHint="@color/cinza"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -283,9 +287,9 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="84dp"
                 android:layout_marginEnd="32dp"
-                android:backgroundTint="@color/gold"
+                android:backgroundTint="@color/dourado"
                 android:text="@string/cadastrar"
-                android:textColor="@color/white"
+                android:textColor="@color/branco"
                 android:textSize="18sp"
                 app:cornerRadius="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -300,10 +304,10 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
-                android:background="@drawable/rounded_gold_border"
+                android:background="@drawable/borda_dourada"
                 android:text="@string/ja_tem_conta"
                 android:textAllCaps="false"
-                android:textColor="@color/gold"
+                android:textColor="@color/dourado"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

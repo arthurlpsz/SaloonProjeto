@@ -132,10 +132,10 @@ class AgendarFragment : Fragment() {
         buttons.forEach { button ->
             if (button == selectedButton) {
                 button.setBackgroundResource(R.drawable.button_selected_background)
-                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.branco))
             } else {
                 button.setBackgroundResource(R.drawable.button_unselected_background)
-                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.gold))
+                button.setTextColor(ContextCompat.getColor(requireContext(), R.color.dourado))
             }
         }
     }
