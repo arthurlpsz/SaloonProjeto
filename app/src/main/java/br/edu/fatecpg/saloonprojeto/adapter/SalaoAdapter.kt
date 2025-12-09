@@ -12,7 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import com.bumptech.glide.Glide
 
-class SalaoAdapter(private var saloes: List<HashMap<String, Any>>) : RecyclerView.Adapter<SalaoAdapter.SalaoViewHolder>() {
+class SalaoAdapter(
+    private var saloes: List<HashMap<String, Any>>,
+    private val onVerServicosClick: (String) -> Unit
+) : RecyclerView.Adapter<SalaoAdapter.SalaoViewHolder>() {
 
     inner class SalaoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nomeSalao: TextView = view.findViewById(R.id.txv_nome_salao)
@@ -31,7 +34,6 @@ class SalaoAdapter(private var saloes: List<HashMap<String, Any>>) : RecyclerVie
         val salao = saloes[position]
         val salaoId = salao["id"] as String
 
-        // Correção: busca por "nomeSalao" para exibir nos cards
         holder.nomeSalao.text = salao["nomeSalao"] as? String ?: "Nome não encontrado"
         holder.enderecoSalao.text = salao["endereco"] as? String ?: "Endereço não disponível"
 
@@ -40,16 +42,14 @@ class SalaoAdapter(private var saloes: List<HashMap<String, Any>>) : RecyclerVie
             Glide.with(holder.itemView.context)
                 .load(imageUrl)
                 .centerCrop()
-                .placeholder(R.drawable.salao_feminino) // Imagem padrão enquanto carrega
+                .placeholder(R.drawable.salao_feminino)
                 .into(holder.imagemSalao)
         } else {
-            holder.imagemSalao.setImageResource(R.drawable.salao_feminino) // Imagem padrão
+            holder.imagemSalao.setImageResource(R.drawable.salao_feminino)
         }
 
         holder.btnVerServicos.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString("salaoId", salaoId)
-            holder.itemView.findNavController().navigate(R.id.action_home_to_salaoServicos, bundle)
+            onVerServicosClick(salaoId)
         }
     }
 

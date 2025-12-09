@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CalendarView
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -17,14 +18,18 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.adapter.TimeSlotAdapter
+import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 class AgendarFragment : Fragment() {
 
@@ -35,6 +40,10 @@ class AgendarFragment : Fragment() {
     private lateinit var btnAmanha: Button
     private lateinit var btnOutroDia: Button
     private lateinit var btnConfirmarAgendamento: Button
+
+    // Header Views
+    private lateinit var profileImage: ImageView
+    private lateinit var userName: TextView
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -75,6 +84,10 @@ class AgendarFragment : Fragment() {
         btnOutroDia = view.findViewById(R.id.btn_outro_dia)
         btnConfirmarAgendamento = view.findViewById(R.id.btn_confirmar_agendamento)
 
+        val headerView = view.findViewById<View>(R.id.header_view)
+        profileImage = headerView.findViewById(R.id.profile_image)
+        userName = headerView.findViewById(R.id.user_name)
+
         rvSlots.layoutManager = GridLayoutManager(requireContext(), 3)
         slotAdapter = TimeSlotAdapter(listaSlots) { horaSelecionada ->
             selectedSlot = horaSelecionada
@@ -100,8 +113,29 @@ class AgendarFragment : Fragment() {
             }
         }
 
-        // Load slots for today initially
+        loadHeaderInfo()
         btnHoje.performClick()
+    }
+
+    private fun loadHeaderInfo() {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("usuarios").document(userId).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists() && isAdded) {
+                        val name = document.getString("nome")
+                        userName.text = name ?: "Nome não encontrado"
+
+                        val imageUrl = document.getString("fotoUrl")
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_person)
+                            .error(R.drawable.ic_person)
+                            .centerCrop()
+                            .into(profileImage)
+                    }
+                }
+        }
     }
 
     private fun setupDateButtons() {
@@ -174,10 +208,10 @@ class AgendarFragment : Fragment() {
                     return@launch
                 }
 
-                val abreMin = (diaMap["start"] as? Long)?.toInt() ?: 0
-                val fechaMin = (diaMap["end"] as? Long)?.toInt() ?: 0
+                val abreMin = (diaMap["start"] as? Number)?.toInt() ?: 0
+                val fechaMin = (diaMap["end"] as? Number)?.toInt() ?: 0
 
-                val ocupados = carregarAgendamentosExistentes()
+                val ocupados = carregarHorariosOcupados()
                 gerarSlots(abreMin, fechaMin, ocupados)
 
             } catch (e: Exception) {
@@ -188,34 +222,24 @@ class AgendarFragment : Fragment() {
         }
     }
 
-    private suspend fun carregarAgendamentosExistentes(): List<Pair<Int, Int>> {
-        val iniDia = (selectedDate.clone() as Calendar).apply {
-            set(Calendar.HOUR_OF_DAY, 0); set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0); set(Calendar.MILLISECOND, 0)
+    private suspend fun carregarHorariosOcupados(): List<Pair<Int, Int>> {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val diaFormatado = dateFormat.format(selectedDate.time)
+
+        try {
+            val doc = db.collection("horariosOcupados").document(salaoId!!).collection("dias").document(diaFormatado).get().await()
+            if (doc.exists()) {
+                val slots = doc.get("slots") as? List<Map<String, Long>>
+                return slots?.mapNotNull {
+                    val inicio = it["inicio"]?.toInt()
+                    val fim = it["fim"]?.toInt()
+                    if (inicio != null && fim != null) Pair(inicio, fim) else null
+                } ?: emptyList()
+            }
+        } catch (e: Exception) {
+            // O documento pode não existir, o que não é um erro.
         }
-        val fimDia = (iniDia.clone() as Calendar).apply { add(Calendar.DAY_OF_MONTH, 1) }
-
-        val snap = db.collection("agendamentos")
-            .whereEqualTo("salaoId", salaoId)
-            .whereGreaterThanOrEqualTo("dataInicio", Timestamp(iniDia.time))
-            .whereLessThan("dataInicio", Timestamp(fimDia.time))
-            .orderBy("dataInicio", Query.Direction.ASCENDING)
-            .get()
-            .await()
-
-        val ocupados = mutableListOf<Pair<Int, Int>>()
-        for (doc in snap) {
-            val dInicio = doc.getTimestamp("dataInicio")?.toDate() ?: continue
-            val dFim = doc.getTimestamp("dataFim")?.toDate() ?: continue
-
-            val calS = Calendar.getInstance().apply { time = dInicio }
-            val calE = Calendar.getInstance().apply { time = dFim }
-
-            val s = calS.get(Calendar.HOUR_OF_DAY) * 60 + calS.get(Calendar.MINUTE)
-            val e = calE.get(Calendar.HOUR_OF_DAY) * 60 + calE.get(Calendar.MINUTE)
-            ocupados.add(Pair(s, e))
-        }
-        return ocupados
+        return emptyList()
     }
 
     private fun gerarSlots(startMin: Int, endMin: Int, ocupados: List<Pair<Int, Int>>) {
@@ -244,7 +268,7 @@ class AgendarFragment : Fragment() {
     private fun formatMinToText(min: Int): String {
         val h = min / 60
         val m = min % 60
-        return String.format("%02d:%02d", h, m)
+        return String.format(Locale.getDefault(), "%02d:%02d", h, m)
     }
 
     private fun dayKeyFromCalendar(c: Calendar): String {
@@ -280,24 +304,37 @@ class AgendarFragment : Fragment() {
                     set(Calendar.MINUTE, m)
                     set(Calendar.SECOND, 0)
                 }
+                val inicioTimestamp = Timestamp(cInicio.time)
+                val fimTimestamp = Timestamp(Date(cInicio.timeInMillis + servicoDuracaoMin * 60000L))
 
-                val inicio = Timestamp(cInicio.time)
-                val fim = Timestamp(Date(cInicio.timeInMillis + servicoDuracaoMin * 60000L))
-
-                val dados = hashMapOf(
+                val agendamentoRef = db.collection("agendamentos").document()
+                val dadosAgendamento = hashMapOf(
                     "salaoId" to salaoId,
                     "clienteId" to userId,
                     "servicoId" to servicoId,
                     "nomeUsuario" to nomeUsuario,
                     "nomeSalao" to nomeSalao,
                     "servico" to nomeServico,
-                    "dataInicio" to inicio,
-                    "dataFim" to fim,
+                    "dataInicio" to inicioTimestamp,
+                    "dataFim" to fimTimestamp,
                     "status" to "Confirmado",
                     "createdAt" to Timestamp.now()
                 )
 
-                db.collection("agendamentos").add(dados).await()
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val diaFormatado = dateFormat.format(selectedDate.time)
+                val horarioOcupadoRef = db.collection("horariosOcupados").document(salaoId!!).collection("dias").document(diaFormatado)
+                val dadosHorario = hashMapOf(
+                    "inicio" to (h * 60 + m),
+                    "fim" to (h * 60 + m + servicoDuracaoMin)
+                )
+
+                // Roda as duas escritas em um batch atômico
+                db.runBatch {
+                    it.set(agendamentoRef, dadosAgendamento)
+                    it.set(horarioOcupadoRef, hashMapOf("slots" to FieldValue.arrayUnion(dadosHorario)), SetOptions.merge())
+                }.await()
+
                 Toast.makeText(requireContext(), "Agendado com sucesso!", Toast.LENGTH_LONG).show()
                 btnConfirmarAgendamento.visibility = View.GONE
                 selectedSlot = null

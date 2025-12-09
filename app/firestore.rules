@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Regras para a coleção 'usuarios'
+    match /usuarios/{userId} {
+        // Permite que qualquer usuário autenticado leia qualquer perfil (necessário para ver horários e dados do salão).
+        allow read: if request.auth != null;
+        // Permite que um usuário crie ou atualize seu próprio perfil.
+        allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Regras para a coleção 'servicos'
+    match /servicos/{servicoId} {
+      // Qualquer um pode ler os serviços
+      allow read: if true;
+      // Apenas o dono do salão pode criar, atualizar e deletar seus serviços
+      allow create, update, delete: if request.auth != null && request.auth.uid == request.resource.data.salaoId;
+    }
+
+    // Regras para a coleção 'agendamentos'
+    match /agendamentos/{agendamentoId} {
+      // Permite leitura se o usuário for o cliente ou o dono do salão
+      allow read: if request.auth != null && (request.auth.uid == resource.data.clienteId || request.auth.uid == resource.data.salaoId);
+      // Permite que um cliente autenticado crie um agendamento
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.clienteId;
+      // Permite que o cliente ou o salão cancelem (atualizem o status) o agendamento
+      allow update: if request.auth != null && (request.auth.uid == resource.data.clienteId || request.auth.uid == resource.data.salaoId);
+    }
+  }
+}

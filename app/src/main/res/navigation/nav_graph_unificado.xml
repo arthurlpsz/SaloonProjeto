@@ -113,7 +113,7 @@
     </fragment>
 
 
-    <!-- ===================== EDITAR PERFIL (NOVO, CORRIGIDO) ===================== -->
+    <!-- ===================== EDITAR PERFIL ===================== -->
 
     <fragment
         android:id="@+id/editarPerfilFragment"
@@ -194,7 +194,7 @@
         android:id="@+id/definirHorariosFragment"
         android:name="br.edu.fatecpg.saloonprojeto.fragments.DefinirHorariosFragment"
         android:label="Horários"
-        tools:layout="@layout/fragment_definir_horarios">
+        tools:layout="@layout/fragment_gerenciar_horarios">
 
         <action
             android:id="@+id/action_definirHorario_to_dashboard"

@@ -83,27 +83,17 @@ class SalaoDashboardFragment : Fragment() {
         if (userId != null) {
             db.collection("usuarios").document(userId).get()
                 .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
-                        val userType = document.getString("tipo")
-                        val name = if (userType == "salao") {
-                            document.getString("nomeSalao")
-                        } else {
-                            document.getString("nome")
-                        }
+                    if (document != null && document.exists() && isAdded) {
+                        val name = document.getString("nomeSalao") ?: "Salão sem nome"
+                        userName.text = name
 
-                        if (!name.isNullOrBlank()) {
-                            userName.text = name
-                        } else {
-                            userName.text = "Nome não encontrado"
-                        }
-
-                        val imageUrl = document.getString("imageUrl")
-                        if (!imageUrl.isNullOrEmpty()) {
-                            Glide.with(this)
-                                .load(imageUrl)
-                                .centerCrop()
-                                .into(profileImage)
-                        }
+                        val imageUrl = document.getString("fotoUrl")
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.ic_person)
+                            .error(R.drawable.ic_person)
+                            .centerCrop()
+                            .into(profileImage)
                     }
                 }
                 .addOnFailureListener { exception ->

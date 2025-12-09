@@ -9,6 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/branco"
         android:padding="16dp">
 
         <TextView
@@ -18,8 +19,8 @@
             android:text="Nome do Serviço"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btn_agendar" />
+            app:layout_constraintEnd_toStartOf="@+id/btn_agendar"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/service_price"

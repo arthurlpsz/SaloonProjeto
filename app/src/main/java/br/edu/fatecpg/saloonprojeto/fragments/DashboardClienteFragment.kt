@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
@@ -42,14 +43,17 @@ class DashboardClienteFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.salons_recycler_view)
         searchView = view.findViewById(R.id.search_view)
-        
+
         val headerView = view.findViewById<View>(R.id.header_view)
         profileImage = headerView.findViewById(R.id.profile_image)
         userName = headerView.findViewById(R.id.user_name)
 
-        // Altera para LinearLayoutManager para exibir um card por linha
         recyclerView.layoutManager = LinearLayoutManager(context)
-        salaoAdapter = SalaoAdapter(filteredSalaoList)
+        salaoAdapter = SalaoAdapter(filteredSalaoList) { salaoId ->
+            val bundle = Bundle()
+            bundle.putString("salaoId", salaoId)
+            findNavController().navigate(R.id.action_home_to_salaoServicos, bundle)
+        }
         recyclerView.adapter = salaoAdapter
 
         setupSearchView()
@@ -64,16 +68,20 @@ class DashboardClienteFragment : Fragment() {
         if (userId != null) {
             db.collection("usuarios").document(userId).get()
                 .addOnSuccessListener { document ->
-                    if (document != null && document.exists()) {
+                    if (document != null && document.exists() && isAdded) {
                         userName.text = document.getString("nome")
 
                         val imageUrl = document.getString("fotoUrl")
-                        Glide.with(this)
-                            .load(imageUrl)
-                            .placeholder(R.drawable.ic_person)
-                            .error(R.drawable.ic_person)
-                            .centerCrop()
-                            .into(profileImage)
+                        if (!imageUrl.isNullOrEmpty()) {
+                            Glide.with(this)
+                                .load(imageUrl)
+                                .placeholder(R.drawable.ic_person)
+                                .error(R.drawable.ic_person)
+                                .centerCrop()
+                                .into(profileImage)
+                        } else {
+                            profileImage.setImageResource(R.drawable.ic_person)
+                        }
                     }
                 }
                 .addOnFailureListener { exception ->
@@ -107,11 +115,10 @@ class DashboardClienteFragment : Fragment() {
                     salao["id"] = document.id
                     salaoList.add(salao)
                 }
-                filterSaloes(searchView.query.toString()) // Filtra com o texto atual da busca
+                filterSaloes(searchView.query.toString())
             }
             .addOnFailureListener { exception ->
                 Log.e("DashboardClienteFragment", "Falha ao carregar salões.", exception)
-                // Lidar com o erro aqui, talvez mostrando uma mensagem
             }
     }
 
@@ -122,12 +129,12 @@ class DashboardClienteFragment : Fragment() {
         } else {
             val lowerCaseQuery = query.lowercase()
             for (salao in salaoList) {
-                val nome = salao["nome"] as? String
+                val nome = salao["nomeSalao"] as? String
                 if (nome != null && nome.lowercase().contains(lowerCaseQuery)) {
                     filteredSalaoList.add(salao)
                 }
             }
         }
-        salaoAdapter.notifyDataSetChanged()
+        salaoAdapter.updateSaloes(filteredSalaoList)
     }
 }

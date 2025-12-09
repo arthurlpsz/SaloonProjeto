@@ -83,7 +83,7 @@ class SalaoAgendamentosFragment : Fragment() {
                         val name = document.getString("nomeSalao") ?: "Salão sem nome"
                         userName.text = name
 
-                        val imageUrl = document.getString("fotoUrl") // Padronizado para "fotoUrl"
+                        val imageUrl = document.getString("fotoUrl")
                         Glide.with(this)
                             .load(imageUrl)
                             .placeholder(R.drawable.ic_person)
@@ -126,6 +126,7 @@ class SalaoAgendamentosFragment : Fragment() {
                 } else {
                     pendentes.forEach { listItemsPendentes.add(ListItem.AgendamentoItem(it)) }
                 }
+
 
                 if (historico.isEmpty()) {
                     listItemsHistorico.add(ListItem.EmptyItem)

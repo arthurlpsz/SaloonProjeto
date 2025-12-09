@@ -21,7 +21,7 @@ class TimeSlotAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimeSlotViewHolder {
         val cardView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_time_slot, parent, false) as MaterialCardView
+            .inflate(R.layout.item_hora, parent, false) as MaterialCardView
         return TimeSlotViewHolder(cardView)
     }
 

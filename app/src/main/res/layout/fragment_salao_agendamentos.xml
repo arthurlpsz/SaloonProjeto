@@ -29,12 +29,13 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="Agendamentos Pendentes"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Agendamentos Pendentes"
+                android:textColor="@color/azul_petroleo"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_pendentes_salao"
@@ -43,13 +44,14 @@
                 android:nestedScrollingEnabled="false"/>
 
             <TextView
-                android:text="Histórico de Agendamentos"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:text="Histórico de Agendamentos"
+                android:textColor="@color/azul_petroleo"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_historico_salao"

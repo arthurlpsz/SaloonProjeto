@@ -30,7 +30,7 @@ class DefinirHorariosFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_definir_horarios, container, false)
+        return inflater.inflate(R.layout.fragment_gerenciar_horarios, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
