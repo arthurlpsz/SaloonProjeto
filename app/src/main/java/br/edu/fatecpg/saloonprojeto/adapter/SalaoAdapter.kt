@@ -37,7 +37,7 @@ class SalaoAdapter(
         holder.nomeSalao.text = salao["nomeSalao"] as? String ?: "Nome não encontrado"
         holder.enderecoSalao.text = salao["endereco"] as? String ?: "Endereço não disponível"
 
-        val imageUrl = salao["imageUrl"] as? String
+        val imageUrl = salao["fotoUrl"] as? String
         if (!imageUrl.isNullOrEmpty()) {
             Glide.with(holder.itemView.context)
                 .load(imageUrl)

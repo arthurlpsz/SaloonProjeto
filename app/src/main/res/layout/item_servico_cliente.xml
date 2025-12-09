@@ -20,7 +20,8 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/btn_agendar"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/service_price"
@@ -38,7 +39,8 @@
             android:text="Duração: 60 min"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/service_price" />
+            app:layout_constraintTop_toBottomOf="@+id/service_price"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <Button
             android:id="@+id/btn_agendar"

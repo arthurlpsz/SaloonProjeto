@@ -22,6 +22,7 @@ class PerfilFragment : Fragment() {
     private lateinit var nomePerfil: TextView
     private lateinit var emailPerfil: TextView
     private lateinit var telefonePerfil: TextView
+    private lateinit var enderecoPerfil: TextView
     private lateinit var btnLogout: Button
     private lateinit var profileImage: CircleImageView
 
@@ -45,6 +46,7 @@ class PerfilFragment : Fragment() {
         nomePerfil = view.findViewById(R.id.txv_nome)
         emailPerfil = view.findViewById(R.id.txv_email)
         telefonePerfil = view.findViewById(R.id.txv_telefone)
+        enderecoPerfil = view.findViewById(R.id.txv_endereco)
         btnLogout = view.findViewById(R.id.btn_logout)
         profileImage = view.findViewById(R.id.profile_image)
 
@@ -114,10 +116,12 @@ class PerfilFragment : Fragment() {
                             telefonePerfil.text = formatPhoneNumber(telefone)
                         }
 
+                        enderecoPerfil.text = document.getString("endereco")
+
                         val imageUrl = document.getString("fotoUrl")
                         Glide.with(this)
                             .load(imageUrl)
-                            .placeholder(R.drawable.ic_person) 
+                            .placeholder(R.drawable.ic_person)
                             .error(R.drawable.ic_person)
                             .into(profileImage)
                     }

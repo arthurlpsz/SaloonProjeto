@@ -9,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 
 class ServicoClienteAdapter(
-    private var lista: List<HashMap<String, Any>>,
     private val onAgendarClick: (String) -> Unit
 ) : RecyclerView.Adapter<ServicoClienteAdapter.ServicoViewHolder>() {
+
+    private val lista = mutableListOf<HashMap<String, Any>>()
 
     inner class ServicoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nome: TextView = view.findViewById(R.id.service_name)
@@ -47,7 +48,8 @@ class ServicoClienteAdapter(
     override fun getItemCount(): Int = lista.size
 
     fun updateList(newList: List<HashMap<String, Any>>) {
-        lista = newList
+        lista.clear()
+        lista.addAll(newList)
         notifyDataSetChanged()
     }
 }

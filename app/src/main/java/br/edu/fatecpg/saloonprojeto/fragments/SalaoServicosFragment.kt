@@ -23,7 +23,6 @@ class SalaoServicosFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var servicoAdapter: ServicoClienteAdapter
     private lateinit var ivBack: ImageView
-    private val listaServicos = mutableListOf<HashMap<String, Any>>()
     private var salaoId: String? = null
 
     private val db = FirebaseFirestore.getInstance()
@@ -32,6 +31,11 @@ class SalaoServicosFragment : Fragment() {
     // Header Views
     private lateinit var profileImage: ImageView
     private lateinit var userName: TextView
+
+    // Salao Info Views
+    private lateinit var salaoImage: ImageView
+    private lateinit var salaoName: TextView
+    private lateinit var salaoAddress: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,13 +53,18 @@ class SalaoServicosFragment : Fragment() {
         recyclerView = view.findViewById(R.id.services_recycler_view)
         ivBack = view.findViewById(R.id.ic_voltar)
 
-        // Acessa as views do cabeçalho incluído
         val headerView = view.findViewById<View>(R.id.header_view)
         profileImage = headerView.findViewById(R.id.profile_image)
         userName = headerView.findViewById(R.id.user_name)
 
+        val salaoInfoView = view.findViewById<View>(R.id.salao_info_view)
+        salaoImage = salaoInfoView.findViewById(R.id.img_salao)
+        salaoName = salaoInfoView.findViewById(R.id.salon_name)
+        salaoAddress = salaoInfoView.findViewById(R.id.salon_address)
+
         recyclerView.layoutManager = LinearLayoutManager(context)
-        servicoAdapter = ServicoClienteAdapter(listaServicos) { servicoId ->
+        // Inicializa o adapter sem passar a lista
+        servicoAdapter = ServicoClienteAdapter { servicoId ->
             val bundle = Bundle()
             bundle.putString("salaoId", salaoId)
             bundle.putString("servicoId", servicoId)
@@ -73,6 +82,7 @@ class SalaoServicosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadHeaderInfo()
+        loadSalaoInfo()
         carregarServicos()
     }
 
@@ -83,15 +93,12 @@ class SalaoServicosFragment : Fragment() {
             return
         }
 
-        // Busca os dados do usuário logado para exibir no cabeçalho.
         db.collection("usuarios").document(userId).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists() && isAdded) {
-                    // Usa "nome" do usuário para o texto.
                     val name = document.getString("nome") ?: "Usuário"
                     userName.text = name
 
-                    // Usa "fotoUrl" do usuário para a imagem.
                     val imageUrl = document.getString("fotoUrl")
                     Glide.with(this)
                         .load(imageUrl)
@@ -106,6 +113,32 @@ class SalaoServicosFragment : Fragment() {
             }
     }
 
+    private fun loadSalaoInfo() {
+        if (salaoId == null) {
+            Log.e("SalaoServicosFragment", "ID do salão não fornecido, não é possível carregar informações.")
+            return
+        }
+
+        db.collection("usuarios").document(salaoId!!).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists() && isAdded) {
+                    salaoName.text = document.getString("nomeSalao") ?: "Salão não encontrado"
+                    salaoAddress.text = document.getString("endereco") ?: "Endereço não disponível"
+
+                    val imageUrl = document.getString("fotoUrl")
+                    Glide.with(this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.salao_feminino) // Imagem padrão
+                        .error(R.drawable.salao_feminino)       // Imagem em caso de erro
+                        .centerCrop()
+                        .into(salaoImage)
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("SalaoServicosFragment", "Erro ao carregar informações do salão", exception)
+            }
+    }
+
     private fun carregarServicos() {
         if (salaoId == null) {
             Toast.makeText(context, "ID do salão não fornecido", Toast.LENGTH_SHORT).show()
@@ -114,20 +147,22 @@ class SalaoServicosFragment : Fragment() {
 
         db.collection("servicos")
             .whereEqualTo("salaoId", salaoId)
+            .whereEqualTo("ativo", true) // Garante que apenas serviços ativos sejam mostrados
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     Toast.makeText(context, "Erro ao carregar serviços", Toast.LENGTH_SHORT).show()
                     return@addSnapshotListener
                 }
 
-                listaServicos.clear()
+                val tempList = mutableListOf<HashMap<String, Any>>()
                 if (snapshots != null) {
                     for (doc in snapshots.documents) {
                         val servico = doc.data as HashMap<String, Any>
                         servico["id"] = doc.id
-                        listaServicos.add(servico)
+                        tempList.add(servico)
                     }
-                    servicoAdapter.updateList(listaServicos)
+                    // Apenas entrega a nova lista para o adapter
+                    servicoAdapter.updateList(tempList)
                 }
             }
     }

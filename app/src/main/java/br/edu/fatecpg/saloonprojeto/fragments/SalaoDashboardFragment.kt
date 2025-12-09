@@ -31,6 +31,11 @@ class SalaoDashboardFragment : Fragment() {
     private lateinit var profileImage: ImageView
     private lateinit var userName: TextView
 
+    // Salao Info Views
+    private lateinit var salaoImage: ImageView
+    private lateinit var salaoName: TextView
+    private lateinit var salaoAddress: TextView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,10 +45,14 @@ class SalaoDashboardFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
 
-        // Inicializa as views do header
         val headerView = view.findViewById<View>(R.id.header_view)
         profileImage = headerView.findViewById(R.id.profile_image)
         userName = headerView.findViewById(R.id.user_name)
+
+        val salaoInfoView = view.findViewById<View>(R.id.salao_info_view)
+        salaoImage = salaoInfoView.findViewById(R.id.img_salao)
+        salaoName = salaoInfoView.findViewById(R.id.salon_name)
+        salaoAddress = salaoInfoView.findViewById(R.id.salon_address)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.services_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -66,6 +75,7 @@ class SalaoDashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadHeaderInfo()
+        loadSalaoInfo()
     }
 
     override fun onStart() {
@@ -98,6 +108,30 @@ class SalaoDashboardFragment : Fragment() {
                 }
                 .addOnFailureListener { exception ->
                     Log.e("SalaoDashboardFragment", "Erro ao carregar informações do cabeçalho", exception)
+                }
+        }
+    }
+
+    private fun loadSalaoInfo() {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("usuarios").document(userId).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists() && isAdded) {
+                        salaoName.text = document.getString("nomeSalao") ?: "Salão não encontrado"
+                        salaoAddress.text = document.getString("endereco") ?: "Endereço não disponível"
+
+                        val imageUrl = document.getString("fotoUrl")
+                        Glide.with(this)
+                            .load(imageUrl)
+                            .placeholder(R.drawable.salao_feminino) // Imagem padrão
+                            .error(R.drawable.salao_feminino)       // Imagem em caso de erro
+                            .centerCrop()
+                            .into(salaoImage)
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.e("SalaoDashboardFragment", "Erro ao carregar informações do salão", exception)
                 }
         }
     }
