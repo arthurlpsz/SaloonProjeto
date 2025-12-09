@@ -47,7 +47,7 @@ class ServicoAdapter(
             is Number -> "R$ %.2f".format(preco.toDouble())
             else -> "R$ 0.00"
         }
-        holder.duracao.text = "Duração: ${servico["duracaoMin"]} min"
+        holder.duracao.text = "Duração: ${servico["duração"]} min"
 
         // Diferenciação visual para serviços inativos
         holder.itemView.alpha = if (isAtivo) 1.0f else 0.5f

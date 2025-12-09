@@ -99,8 +99,7 @@ class SalaoEditarServicoFragment : Fragment() {
                         etNome.setText(document.getString("nome"))
                         etDescricao.setText(document.getString("descricao"))
                         etPreco.setText(document.getDouble("preco").toString())
-                        // Ajuste para "duracaoMin" como em AgendarFragment
-                        etDuracao.setText(document.getLong("duracaoMin").toString())
+                        etDuracao.setText(document.getLong("duração").toString())
                     } else {
                         Toast.makeText(requireContext(), "Serviço não encontrado.", Toast.LENGTH_SHORT).show()
                         findNavController().popBackStack()
@@ -129,8 +128,7 @@ class SalaoEditarServicoFragment : Fragment() {
                 "nome" to nome,
                 "descricao" to descricao,
                 "preco" to preco,
-                // Ajuste para "duracaoMin" como em AgendarFragment
-                "duracaoMin" to duracao
+                "duração" to duracao
             )
 
             db.collection("servicos").document(it)

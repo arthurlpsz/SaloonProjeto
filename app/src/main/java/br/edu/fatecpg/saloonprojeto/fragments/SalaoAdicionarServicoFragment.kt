@@ -62,7 +62,7 @@ class SalaoAdicionarServicoFragment : Fragment() {
             "nome" to nome,
             "descricao" to descricao,
             "preco" to preco,
-            "duracao" to duracao, // Correção: padronizado para "duracao"
+            "duração" to duracao,
             "createdAt" to Timestamp.now()
         )
 
