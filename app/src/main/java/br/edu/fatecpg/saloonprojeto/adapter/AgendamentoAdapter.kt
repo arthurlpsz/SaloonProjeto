@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 import br.edu.fatecpg.saloonprojeto.model.Agendamento
@@ -25,7 +26,7 @@ enum class AgendamentoViewType {
 class AgendamentoAdapter(
     private val items: MutableList<ListItem>,
     private val viewType: AgendamentoViewType,
-    private val onCancelarClick: (Agendamento) -> Unit
+    private val onActionClick: (Agendamento) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -74,7 +75,7 @@ class AgendamentoAdapter(
         private val bookingTime: TextView = itemView.findViewById(R.id.booking_time)
         private val bookingStatus: TextView = itemView.findViewById(R.id.booking_status)
         private val statusBar: View = itemView.findViewById(R.id.status_bar)
-        private val btnCancelar: Button = itemView.findViewById(R.id.btn_cancelar)
+        private val actionButton: Button = itemView.findViewById(R.id.btn_cancelar)
 
         fun bind(agendamento: Agendamento) {
             serviceName.text = agendamento.servico
@@ -82,8 +83,10 @@ class AgendamentoAdapter(
 
             if (viewType == AgendamentoViewType.SALAO) {
                 nameTextView.text = "Cliente: ${agendamento.nomeUsuario}"
+                actionButton.text = "Confirmar"
             } else {
                 nameTextView.text = "Salão: ${agendamento.nomeSalao}"
+                actionButton.text = "Cancelar"
             }
 
             agendamento.dataInicio?.toDate()?.let {
@@ -95,17 +98,21 @@ class AgendamentoAdapter(
 
             when (agendamento.status) {
                 "Confirmado" -> {
-                    statusBar.setBackgroundColor(Color.parseColor("#FFD700")) // Gold
-                    btnCancelar.visibility = View.VISIBLE
-                    btnCancelar.setOnClickListener { onCancelarClick(agendamento) }
+                    statusBar.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.dourado))
+                    actionButton.visibility = View.VISIBLE
+                    actionButton.setOnClickListener { onActionClick(agendamento) }
                 }
-                "Cancelado", "Realizado" -> {
-                    statusBar.setBackgroundColor(Color.parseColor(if (agendamento.status == "Cancelado") "#FF0000" else "#808080")) // Red for Cancelado, Gray for Realizado
-                    btnCancelar.visibility = View.GONE
+                "Cancelado" -> {
+                    statusBar.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.vermelho))
+                    actionButton.visibility = View.GONE
+                }
+                "Realizado" -> {
+                    statusBar.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.verde))
+                    actionButton.visibility = View.GONE
                 }
                 else -> {
                     statusBar.setBackgroundColor(Color.parseColor("#808080")) // Gray
-                    btnCancelar.visibility = View.GONE
+                    actionButton.visibility = View.GONE
                 }
             }
         }
