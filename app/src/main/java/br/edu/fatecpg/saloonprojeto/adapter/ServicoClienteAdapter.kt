@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import br.edu.fatecpg.saloonprojeto.R
 
 class ServicoClienteAdapter(
+    private val lista: MutableList<HashMap<String, Any>>,
     private val onAgendarClick: (String) -> Unit
 ) : RecyclerView.Adapter<ServicoClienteAdapter.ServicoViewHolder>() {
-
-    private val lista = mutableListOf<HashMap<String, Any>>()
 
     inner class ServicoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nome: TextView = view.findViewById(R.id.service_name)
         val preco: TextView = view.findViewById(R.id.service_price)
+        val duracao: TextView = view.findViewById(R.id.duracao_servico)
         val botaoAgendar: Button = view.findViewById(R.id.btn_agendar)
     }
 
@@ -31,14 +31,22 @@ class ServicoClienteAdapter(
 
         val nome = servico["nome"] as? String ?: "Serviço"
         val preco = servico["preco"]
+        val duracao = servico["duração"]
         val precoFormatado = when (preco) {
             is Number -> "R$ %.2f".format(preco.toDouble())
             else -> "R$ 0.00"
         }
+
+        val duracaoFormatada = when (duracao) {
+            is Number -> "Duração: ${duracao} min"
+            else -> "Duração: --"
+        }
+
         val id = servico["id"] as? String ?: ""
 
         holder.nome.text = nome
         holder.preco.text = precoFormatado
+        holder.duracao.text = duracaoFormatada
 
         holder.botaoAgendar.setOnClickListener {
             onAgendarClick(id)
@@ -47,9 +55,5 @@ class ServicoClienteAdapter(
 
     override fun getItemCount(): Int = lista.size
 
-    fun updateList(newList: List<HashMap<String, Any>>) {
-        lista.clear()
-        lista.addAll(newList)
-        notifyDataSetChanged()
-    }
+    // A função updateList não é mais necessária, pois o fragment gerencia a lista diretamente
 }

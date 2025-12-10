@@ -24,6 +24,7 @@ class SalaoServicosFragment : Fragment() {
     private lateinit var servicoAdapter: ServicoClienteAdapter
     private lateinit var ivBack: ImageView
     private var salaoId: String? = null
+    private var listaServicos = mutableListOf<HashMap<String, Any>>()
 
     private val db = FirebaseFirestore.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -63,8 +64,7 @@ class SalaoServicosFragment : Fragment() {
         salaoAddress = salaoInfoView.findViewById(R.id.salon_address)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
-        // Inicializa o adapter sem passar a lista
-        servicoAdapter = ServicoClienteAdapter { servicoId ->
+        servicoAdapter = ServicoClienteAdapter(listaServicos) { servicoId ->
             val bundle = Bundle()
             bundle.putString("salaoId", salaoId)
             bundle.putString("servicoId", servicoId)
@@ -161,8 +161,9 @@ class SalaoServicosFragment : Fragment() {
                         servico["id"] = doc.id
                         tempList.add(servico)
                     }
-                    // Apenas entrega a nova lista para o adapter
-                    servicoAdapter.updateList(tempList)
+                    listaServicos.clear()
+                    listaServicos.addAll(tempList)
+                    servicoAdapter.notifyDataSetChanged()
                 }
             }
     }

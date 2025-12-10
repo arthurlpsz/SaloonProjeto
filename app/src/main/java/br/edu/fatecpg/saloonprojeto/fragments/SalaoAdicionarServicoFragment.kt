@@ -63,6 +63,7 @@ class SalaoAdicionarServicoFragment : Fragment() {
             "descricao" to descricao,
             "preco" to preco,
             "duração" to duracao,
+            "ativo" to true,
             "createdAt" to Timestamp.now()
         )
 
