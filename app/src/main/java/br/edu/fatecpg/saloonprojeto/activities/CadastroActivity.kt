@@ -36,8 +36,8 @@ class CadastroActivity : AppCompatActivity() {
         db = FirebaseFirestore.getInstance()
 
         // Botões e campos
-        clientButton = findViewById(R.id.client_button)
-        salonButton = findViewById(R.id.salon_button)
+        clientButton = findViewById(R.id.btn_cliente)
+        salonButton = findViewById(R.id.btn_salao)
         clientFields = findViewById(R.id.client_fields_group)
         salonFields = findViewById(R.id.salon_fields_group)
 

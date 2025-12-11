@@ -59,30 +59,28 @@
                 app:layout_constraintTop_toBottomOf="@+id/cadastro_title">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/client_button"
+                    android:id="@+id/btn_cliente"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_selected_background"
                     android:text="@string/cliente"
-                    android:textAllCaps="false"
                     android:textColor="@color/branco" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/salon_button"
+                    android:id="@+id/btn_salao"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/button_unselected_background"
                     android:text="@string/salao"
-                    android:textAllCaps="false"
                     android:textColor="@color/dourado" />
 
             </LinearLayout>
 
-            <!-- Client Fields -->
+            <!-- Cliente -->
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/client_fields_group"
                 android:layout_width="wrap_content"
@@ -119,7 +117,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/name_label" />
 
-            <!-- Salon Fields -->
+            <!-- Salão -->
             <androidx.constraintlayout.widget.Group
                 android:id="@+id/salon_fields_group"
                 android:layout_width="wrap_content"
@@ -183,7 +181,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/address_label" />
 
-            <!-- Barrier to handle dynamic fields -->
             <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/form_barrier"
                 android:layout_width="wrap_content"
@@ -191,7 +188,6 @@
                 app:barrierDirection="bottom"
                 app:constraint_referenced_ids="name,address" />
 
-            <!-- Common Fields -->
             <TextView
                 android:id="@+id/phone_label"
                 android:layout_width="wrap_content"
