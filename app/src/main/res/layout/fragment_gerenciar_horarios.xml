@@ -20,7 +20,7 @@
         android:id="@+id/txv_gerenciar_horario"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/gerenciar_horarios"
+        android:text="@string/gerenciar_servicos"
         android:textColor="@color/azul_petroleo"
         android:textSize="24sp"
         android:textStyle="bold"
