@@ -52,4 +52,6 @@
     <string name="escolher_foto">Escolher uma foto</string>
     <string name="salvar_continuar">Salvar e continuar</string>
     <string name="adicione_foto_perfil">Para personalizar seu perfil, adicione uma foto</string>
+    <string name="gerenciar_horarios">Gerenciar Horários</string>
+    <string name="lista_horarios">Lista de horários disponíveis do salão</string>
 </resources>
