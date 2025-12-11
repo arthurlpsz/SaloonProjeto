@@ -1,4 +1,4 @@
-package br.edu.fatecpg.saloonprojeto
+package br.edu.fatecpg.saloonprojeto.utils
 
 import android.text.Editable
 import android.text.TextWatcher

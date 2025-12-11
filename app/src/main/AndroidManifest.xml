@@ -16,7 +16,7 @@
         android:theme="@style/Theme.SaloonProjeto">
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,11 +24,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
-        <activity android:name=".CadastroActivity" />
-        <activity android:name=".IntroActivity" />
-        <activity android:name=".ClienteActivity" />
-        <activity android:name=".SalaoActivity" />
+        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.CadastroActivity" />
+        <activity android:name=".activities.IntroActivity" />
+        <activity android:name=".activities.ClienteActivity" />
+        <activity android:name=".activities.SalaoActivity" />
 
     </application>
 

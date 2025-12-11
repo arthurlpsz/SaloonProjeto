@@ -6,56 +6,62 @@
     android:layout_height="match_parent"
     android:background="@color/branco"
     android:padding="16dp"
-    tools:context=".IntroActivity">
+    tools:context=".activities.IntroActivity">
 
     <TextView
         android:id="@+id/txv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Adicione uma foto de perfil"
+        android:layout_marginTop="68dp"
+        android:text="@string/adicione_foto_perfil"
+        android:textAlignment="center"
         android:textColor="@color/azul_petroleo"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="32dp"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_profile"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="44dp"
         android:src="@drawable/ic_person"
         app:civ_border_color="@color/dourado"
         app:civ_border_width="2dp"
-        app:layout_constraintTop_toBottomOf="@id/txv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/txv_title" />
 
     <Button
         android:id="@+id/btn_select_photo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="188dp"
         android:backgroundTint="@color/azul_petroleo"
-        android:text="Escolher foto"
+        android:text="@string/escolher_foto"
         android:textColor="@color/branco"
-        app:layout_constraintTop_toBottomOf="@id/img_profile"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/img_profile" />
 
     <Button
         android:id="@+id/btn_save"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:backgroundTint="@color/dourado"
-        android:text="Salvar e continuar"
+        android:text="@string/salvar_continuar"
         android:textColor="@color/branco"
-        app:layout_constraintTop_toBottomOf="@id/btn_select_photo"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/btn_select_photo" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

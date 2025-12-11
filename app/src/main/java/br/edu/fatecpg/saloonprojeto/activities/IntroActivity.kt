@@ -1,4 +1,4 @@
-package br.edu.fatecpg.saloonprojeto
+package br.edu.fatecpg.saloonprojeto.activities
 
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import br.edu.fatecpg.saloonprojeto.R
 import com.bumptech.glide.Glide
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlin.collections.get
 
 class IntroActivity : AppCompatActivity() {
 

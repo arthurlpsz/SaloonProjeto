@@ -1,10 +1,11 @@
-package br.edu.fatecpg.saloonprojeto
+package br.edu.fatecpg.saloonprojeto.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import br.edu.fatecpg.saloonprojeto.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SalaoActivity : AppCompatActivity() {

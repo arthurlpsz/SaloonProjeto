@@ -1,4 +1,4 @@
-package br.edu.fatecpg.saloonprojeto
+package br.edu.fatecpg.saloonprojeto.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.Group
 import androidx.core.content.ContextCompat
+import br.edu.fatecpg.saloonprojeto.R
+import br.edu.fatecpg.saloonprojeto.utils.TelefoneFormatador
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore

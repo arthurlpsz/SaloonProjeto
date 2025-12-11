@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import br.edu.fatecpg.saloonprojeto.LoginActivity
+import br.edu.fatecpg.saloonprojeto.activities.LoginActivity
 import br.edu.fatecpg.saloonprojeto.R
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
@@ -82,13 +82,13 @@ class PerfilFragment : Fragment() {
             return phone
         }
 
-        val ddd = digits.substring(0, 2)
+        val ddd = digits.take(2)
         val numberPart = digits.substring(2)
 
         val formattedNumber = if (numberPart.length == 9) {
-            "${numberPart.substring(0, 5)}-${numberPart.substring(5)}"
+            "${numberPart.take(5)}-${numberPart.substring(5)}"
         } else {
-            "${numberPart.substring(0, 4)}-${numberPart.substring(4)}"
+            "${numberPart.take(4)}-${numberPart.substring(4)}"
         }
 
         return "($ddd) $formattedNumber"

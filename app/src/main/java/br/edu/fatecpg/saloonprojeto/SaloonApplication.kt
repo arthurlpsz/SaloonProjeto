@@ -8,7 +8,7 @@ class SaloonApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Inicializa o Cloudinary de forma global e segura
+        // Inicializa o Cloudinary
         if (BuildConfig.CLOUDINARY_CLOUD_NAME.isNotEmpty()) {
             try {
                 val config = mapOf(
