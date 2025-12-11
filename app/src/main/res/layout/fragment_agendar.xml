@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/branco">
+    android:background="@color/branco">
 
     <include
         android:id="@+id/header_view"
@@ -72,11 +72,12 @@
             android:id="@+id/btn_hoje"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.90"
             android:background="@drawable/button_selected_background"
             android:text="@string/hoje"
+            android:textAllCaps="true"
             android:textColor="@color/branco"
-            android:textSize="14sp"
+            android:textSize="12sp"
             app:backgroundTint="@null" />
 
         <Button
@@ -84,11 +85,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_weight="1"
+            android:layout_weight="1.10"
             android:background="@drawable/button_unselected_background"
             android:text="@string/amanha"
+            android:textAllCaps="true"
             android:textColor="@color/dourado"
-            android:textSize="14sp"
+            android:textSize="12sp"
             app:backgroundTint="@null" />
 
         <Button
@@ -99,10 +101,35 @@
             android:layout_weight="1.5"
             android:background="@drawable/button_unselected_background"
             android:text="@string/escolher_data"
+            android:textAllCaps="true"
             android:textColor="@color/dourado"
-            android:textSize="14sp"
+            android:textSize="12sp"
             app:backgroundTint="@null" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/txv_selected_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textAlignment="textStart"
+        android:textColor="@color/preto"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@+id/ll_date_buttons"
+        tools:text="11/12/2025" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/dourado"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@+id/txv_selected_date" />
 
     <TextView
         android:id="@+id/txv_horarios_disponiveis"
@@ -113,17 +140,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/ll_date_buttons" />
-
-    <CalendarView
-        android:id="@+id/calendar_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
-        app:layout_constraintStart_toStartOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/txv_horarios_disponiveis" />
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_slots"
@@ -133,7 +150,7 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_confirmar_agendamento"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintStart_toStartOf="@id/guideline_start"
-        app:layout_constraintTop_toBottomOf="@+id/calendar_view" />
+        app:layout_constraintTop_toBottomOf="@+id/txv_horarios_disponiveis" />
 
     <Button
         android:id="@+id/btn_confirmar_agendamento"

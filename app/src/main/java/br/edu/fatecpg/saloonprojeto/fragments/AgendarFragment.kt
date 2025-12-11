@@ -1,16 +1,15 @@
 package br.edu.fatecpg.saloonprojeto.fragments
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CalendarView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -33,13 +32,13 @@ import java.util.Locale
 
 class AgendarFragment : Fragment() {
 
-    private lateinit var calendarView: CalendarView
     private lateinit var rvSlots: RecyclerView
     private lateinit var imgVoltar: ImageView
     private lateinit var btnHoje: Button
     private lateinit var btnAmanha: Button
     private lateinit var btnOutroDia: Button
     private lateinit var btnConfirmarAgendamento: Button
+    private lateinit var txvSelectedDate: TextView
 
     // Header Views
     private lateinit var profileImage: ImageView
@@ -76,13 +75,13 @@ class AgendarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        calendarView = view.findViewById(R.id.calendar_view)
         rvSlots = view.findViewById(R.id.rv_slots)
         imgVoltar = view.findViewById(R.id.img_voltar)
         btnHoje = view.findViewById(R.id.btn_hoje)
         btnAmanha = view.findViewById(R.id.btn_amanha)
         btnOutroDia = view.findViewById(R.id.btn_outro_dia)
         btnConfirmarAgendamento = view.findViewById(R.id.btn_confirmar_agendamento)
+        txvSelectedDate = view.findViewById(R.id.txv_selected_date)
 
         val headerView = view.findViewById<View>(R.id.header_view)
         profileImage = headerView.findViewById(R.id.profile_image)
@@ -96,12 +95,6 @@ class AgendarFragment : Fragment() {
         rvSlots.adapter = slotAdapter
 
         setupDateButtons()
-
-        calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            selectedDate.set(year, month, dayOfMonth)
-            carregarSlots()
-            calendarView.visibility = View.GONE
-        }
 
         imgVoltar.setOnClickListener {
             findNavController().popBackStack()
@@ -141,8 +134,8 @@ class AgendarFragment : Fragment() {
     private fun setupDateButtons() {
         btnHoje.setOnClickListener {
             selectedDate = Calendar.getInstance()
+            updateDateTextView()
             updateButtonStyles(it)
-            calendarView.visibility = View.GONE
             carregarSlots()
         }
 
@@ -150,15 +143,36 @@ class AgendarFragment : Fragment() {
             selectedDate = Calendar.getInstance().apply {
                 add(Calendar.DAY_OF_YEAR, 1)
             }
+            updateDateTextView()
             updateButtonStyles(it)
-            calendarView.visibility = View.GONE
             carregarSlots()
         }
 
         btnOutroDia.setOnClickListener {
             updateButtonStyles(it)
-            calendarView.visibility = if (calendarView.isVisible) View.GONE else View.VISIBLE
+            showDatePickerDialog()
         }
+    }
+
+    private fun showDatePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+            selectedDate.set(selectedYear, selectedMonth, selectedDay)
+            updateDateTextView()
+            carregarSlots()
+        }, year, month, day)
+
+        datePickerDialog.show()
+    }
+
+    private fun updateDateTextView() {
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val formattedDate = sdf.format(selectedDate.time)
+        txvSelectedDate.text = "Data do agendamento: $formattedDate"
     }
 
     private fun updateButtonStyles(selectedButton: View) {
@@ -255,7 +269,7 @@ class AgendarFragment : Fragment() {
                 listaSlots.add(formatMinToText(s))
             }
 
-            cursor += 15
+            cursor += 30
         }
 
         slotAdapter.updateList(listaSlots.toList())
